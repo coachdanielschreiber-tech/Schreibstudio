@@ -1,0 +1,3908 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1e1a17">
+<meta name="apple-mobile-web-app-title" content="Schreibstudio">
+<title>Schreibstudio</title>
+
+<!-- Favicon als inline SVG — Federkiel auf dunklem Hintergrund -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231e1a17'/%3E%3Crect x='4' y='4' width='56' height='56' rx='11' fill='none' stroke='%23c9a84c' stroke-width='1.5' opacity='0.4'/%3E%3C!-- Federkiel --%3E%3Cpath d='M46 10 C46 10 52 18 44 28 C40 33 34 36 30 38 L20 50 C19 51 17 51 17 49 L18 47 C16 46 16 44 17 43 L28 32 C30 28 33 22 36 18 C40 12 46 10 46 10Z' fill='%23c9a84c' opacity='0.95'/%3E%3Cpath d='M46 10 C44 14 40 18 36 22 C32 26 28 30 24 36 L20 44' fill='none' stroke='%231e1a17' stroke-width='1.2' opacity='0.6'/%3E%3Cpath d='M17 49 C20 45 25 40 30 38' fill='none' stroke='%238a6e30' stroke-width='1.5'/%3E%3Ccircle cx='17.5' cy='48.5' r='2' fill='%23e8c97a'/%3E%3C!-- Tintenspur --%3E%3Cpath d='M19 51 Q16 54 14 56 Q16 54 20 53Z' fill='%23c9a84c' opacity='0.7'/%3E%3C/svg%3E">
+
+<!-- Apple Touch Icon (180x180) -->
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%231e1a17'/%3E%3Crect x='10' y='10' width='160' height='160' rx='32' fill='none' stroke='%23c9a84c' stroke-width='3' opacity='0.35'/%3E%3Cpath d='M128 28 C128 28 148 52 124 80 C112 94 96 103 86 108 L56 142 C53 145 47 145 47 140 L50 135 C45 132 45 127 48 124 L78 92 C84 81 93 63 102 51 C113 35 128 28 128 28Z' fill='%23c9a84c'/%3E%3Cpath d='M128 28 C122 40 112 52 102 62 C91 73 80 84 68 100 L56 128' fill='none' stroke='%231e1a17' stroke-width='3' opacity='0.5'/%3E%3Cpath d='M47 140 C56 128 71 113 86 108' fill='none' stroke='%238a6e30' stroke-width='4'/%3E%3Ccircle cx='49' cy='139' r='5.5' fill='%23e8c97a'/%3E%3Cpath d='M52 144 Q44 152 38 158 Q44 152 56 150Z' fill='%23c9a84c' opacity='0.75'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#1a1410;--ink-soft:#3d3530;--ink-muted:#7a6e68;--ink-faint:#b5aca6;
+  --paper:#f7f3ee;--paper-warm:#f0ebe3;--paper-dark:#e8e0d5;
+  --sidebar-bg:#1e1a17;--sidebar-accent:#2a2420;
+  --gold:#c9a84c;--gold-light:#e8c97a;--gold-dim:#8a6e30;
+  --teal:#2d6e6e;--teal-light:#3d8e8e;
+  --red-soft:#8b3a3a;--green-soft:#3a6b3a;--purple:#6b4e8a;
+  --shadow-sm:0 1px 3px rgba(26,20,16,.08);
+  --shadow-md:0 4px 16px rgba(26,20,16,.12);
+  --shadow-lg:0 12px 40px rgba(26,20,16,.18);
+  --shadow-page:0 4px 32px rgba(26,20,16,.22),0 1px 4px rgba(26,20,16,.1);
+  --radius:6px;--radius-lg:12px;
+  --font-display:'Playfair Display',Georgia,serif;
+  --font-body:'Crimson Pro',Georgia,serif;
+  --font-ui:'DM Sans',system-ui,sans-serif;
+  --sidebar-w:260px;--topbar-h:52px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--font-ui);background:var(--paper-dark);color:var(--ink);display:flex;flex-direction:column}
+button{cursor:pointer;border:none;background:none;font-family:inherit}
+input,textarea,select{font-family:inherit;outline:none}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--paper-dark);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--ink-faint)}
+
+/* ===== LAYOUT ===== */
+#app{display:flex;flex-direction:column;height:100vh}
+
+/* ===== TOPBAR ===== */
+#topbar{height:var(--topbar-h);background:var(--sidebar-bg);display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0;border-bottom:1px solid #2e2820;z-index:100}
+#topbar .logo{font-family:var(--font-display);font-size:18px;font-style:italic;color:var(--gold);letter-spacing:.02em;flex-shrink:0}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink-faint);flex:1;min-width:0}
+.breadcrumb span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.breadcrumb .sep{color:#3a3028}
+.breadcrumb .active{color:var(--gold-light)}
+#topbar-actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.tb-btn{height:30px;padding:0 12px;border-radius:var(--radius);font-size:12px;font-weight:500;display:flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap}
+.tb-btn.primary{background:var(--gold);color:var(--ink)}
+.tb-btn.primary:hover{background:var(--gold-light)}
+.tb-btn.ghost{color:var(--ink-faint);border:1px solid #2e2820}
+.tb-btn.ghost:hover{color:var(--gold);border-color:var(--gold-dim)}
+.tb-btn.danger{color:#cc7070;border:1px solid #3a2020}
+.tb-btn.danger:hover{background:#2a1818;color:#e08080}
+
+/* ===== MAIN ===== */
+#main-body{display:flex;flex:1;overflow:hidden}
+
+/* ===== SIDEBAR ===== */
+#sidebar{width:var(--sidebar-w);background:var(--sidebar-bg);display:flex;flex-direction:column;flex-shrink:0;border-right:1px solid #2e2820;overflow:hidden}
+#sidebar-nav{display:flex;padding:10px 10px 0;gap:2px;flex-shrink:0}
+.nav-tab{flex:1;padding:7px 4px;font-size:10px;font-weight:500;text-align:center;color:var(--ink-muted);border-radius:var(--radius) var(--radius) 0 0;border:1px solid transparent;border-bottom:none;transition:all .15s}
+.nav-tab:hover{color:var(--gold)}
+.nav-tab.active{background:var(--sidebar-accent);color:var(--gold);border-color:#3a3028}
+#sidebar-content{flex:1;overflow-y:auto;background:var(--sidebar-accent);border-top:1px solid #3a3028}
+.sidebar-panel{display:none;padding:10px}
+.sidebar-panel.active{display:block}
+.sidebar-section-title{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-muted);padding:12px 6px 6px}
+.sidebar-item{display:flex;align-items:center;gap:8px;padding:8px;border-radius:var(--radius);font-size:13px;color:var(--ink-faint);cursor:pointer;transition:all .15s}
+.sidebar-item:hover{background:rgba(201,168,76,.08);color:var(--paper)}
+.sidebar-item.active{background:rgba(201,168,76,.15);color:var(--gold)}
+.sidebar-item .item-icon{font-size:14px;flex-shrink:0;width:18px;text-align:center}
+.sidebar-item .item-text{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sidebar-item .item-badge{font-size:10px;background:rgba(201,168,76,.15);color:var(--gold-dim);padding:1px 6px;border-radius:10px;flex-shrink:0}
+.scene-item{display:flex;align-items:center;gap:6px;padding:5px 8px 5px 24px;border-radius:var(--radius);font-size:12px;color:#5a5048;cursor:pointer;transition:all .15s}
+.scene-item:hover{background:rgba(201,168,76,.06);color:var(--ink-faint)}
+.scene-item.active{background:rgba(201,168,76,.1);color:var(--gold)}
+.sidebar-add-btn{width:100%;padding:7px;border:1px dashed #3a3028;border-radius:var(--radius);font-size:12px;color:var(--ink-muted);display:flex;align-items:center;justify-content:center;gap:6px;margin-top:6px;transition:all .15s}
+.sidebar-add-btn:hover{border-color:var(--gold-dim);color:var(--gold);background:rgba(201,168,76,.05)}
+
+/* ===== CONTENT ===== */
+#content{flex:1;overflow:hidden;display:flex;flex-direction:column}
+.view{display:none;flex:1;overflow:hidden}
+.view.active{display:flex;flex-direction:column}
+.view-scroll{flex:1;overflow-y:auto;padding:32px 40px}
+
+/* ===== DASHBOARD ===== */
+.dashboard-header{margin-bottom:32px}
+.dashboard-header h1{font-family:var(--font-display);font-size:32px;color:var(--ink);margin-bottom:6px}
+.dashboard-header p{font-family:var(--font-body);font-size:16px;color:var(--ink-muted)}
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
+.project-card{background:var(--paper);border-radius:var(--radius-lg);padding:24px;box-shadow:var(--shadow-md);cursor:pointer;transition:all .2s;border:1px solid transparent;position:relative;overflow:hidden}
+.project-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--teal));opacity:0;transition:opacity .2s}
+.project-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.project-card:hover::before{opacity:1}
+.genre-badge{display:inline-block;font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;padding:3px 8px;border-radius:3px;background:var(--paper-warm);color:var(--ink-muted);margin-bottom:12px}
+.project-card h3{font-family:var(--font-display);font-size:20px;color:var(--ink);margin-bottom:6px;line-height:1.3}
+.project-card .subtitle{font-family:var(--font-body);font-size:14px;color:var(--ink-muted);margin-bottom:16px;font-style:italic}
+.project-stats{display:flex;gap:16px;padding-top:14px;border-top:1px solid var(--paper-dark)}
+.stat .val{font-family:var(--font-display);font-size:18px;color:var(--ink);display:block}
+.stat .lbl{font-size:10px;color:var(--ink-muted);text-transform:uppercase;letter-spacing:.06em}
+.project-card-date{font-size:11px;color:var(--ink-faint);margin-top:12px}
+.project-card-actions{position:absolute;top:12px;right:12px;display:none;gap:4px}
+.project-card:hover .project-card-actions{display:flex}
+.card-act-btn{width:28px;height:28px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:13px;background:var(--paper-warm);color:var(--ink-muted);transition:all .1s}
+.card-act-btn:hover{background:var(--paper-dark);color:var(--ink)}
+.card-act-btn.del:hover{background:#f0dede;color:var(--red-soft)}
+.new-project-card{background:transparent;border:2px dashed var(--paper-dark);border-radius:var(--radius-lg);padding:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;transition:all .2s;min-height:180px;color:var(--ink-faint);font-size:13px}
+.new-project-card:hover{border-color:var(--gold-dim);color:var(--gold);background:rgba(201,168,76,.03)}
+.new-project-card .plus{font-size:28px}
+
+/* ===== PROJECT VIEW ===== */
+.project-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;gap:24px;flex-shrink:0}
+.project-header h2{font-family:var(--font-display);font-size:26px;color:var(--ink);margin-bottom:4px}
+.project-header .meta{font-family:var(--font-body);font-size:15px;color:var(--ink-muted);font-style:italic}
+.project-tabs{display:flex;gap:2px;background:var(--paper-warm);padding:3px;border-radius:var(--radius);margin-bottom:20px;width:fit-content;flex-wrap:wrap;flex-shrink:0}
+.project-tab{padding:6px 14px;font-size:12px;border-radius:4px;color:var(--ink-muted);transition:all .15s}
+.project-tab:hover{color:var(--ink)}
+.project-tab.active{background:var(--paper);color:var(--ink);box-shadow:var(--shadow-sm)}
+.tab-content{display:none;flex:1;overflow:hidden}
+.tab-content.active{display:flex;flex-direction:column}
+.tab-scroll{flex:1;overflow-y:auto;padding:4px 2px}
+
+/* ===== STORYBOARD ===== */
+.chapter-block{background:var(--paper);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:12px}
+.chapter-header{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;border-bottom:1px solid transparent;transition:all .15s}
+.chapter-header:hover{background:var(--paper-warm)}
+.chapter-header.open{border-bottom-color:var(--paper-dark)}
+.chapter-num-badge{font-family:var(--font-display);font-size:13px;font-weight:600;color:var(--gold);background:rgba(201,168,76,.1);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.chapter-title-area{flex:1;min-width:0}
+.chapter-title-area h4{font-family:var(--font-display);font-size:16px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chapter-title-area .sc-count{font-size:11px;color:var(--ink-muted);margin-top:1px}
+.chapter-toggle{color:var(--ink-muted);font-size:12px;transition:transform .2s}
+.chapter-toggle.open{transform:rotate(180deg)}
+.ch-actions{display:flex;gap:4px}
+.ch-btn{height:28px;padding:0 10px;border-radius:4px;font-size:11px;font-weight:500;transition:all .1s}
+.ch-btn.write{background:var(--gold);color:var(--ink)}
+.ch-btn.write:hover{background:var(--gold-light)}
+.ch-btn.edit{background:var(--paper-warm);color:var(--ink-muted)}
+.ch-btn.edit:hover{background:var(--paper-dark);color:var(--ink)}
+.ch-btn.del{color:var(--red-soft);background:#f7efef}
+.ch-btn.del:hover{background:#f0dede}
+.scenes-list{padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.scene-block{background:var(--paper-warm);border-radius:var(--radius);padding:12px 14px;display:flex;align-items:flex-start;gap:12px;border:1px solid transparent;cursor:pointer;transition:all .15s}
+.scene-block:hover{border-color:var(--paper-dark);box-shadow:var(--shadow-sm)}
+.scene-num{font-size:11px;color:var(--ink-muted);flex-shrink:0;padding-top:2px;width:18px}
+.scene-block-info{flex:1;min-width:0}
+.scene-title{font-family:var(--font-display);font-size:14px;color:var(--ink);margin-bottom:3px}
+.scene-note{font-family:var(--font-body);font-size:13px;color:var(--ink-muted);font-style:italic;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.scene-words{font-size:11px;color:var(--ink-faint);margin-top:4px}
+.scene-block-actions{display:flex;gap:4px;flex-shrink:0}
+.sc-btn{height:26px;padding:0 8px;border-radius:4px;font-size:11px;font-weight:500;transition:all .1s}
+.sc-btn.write{background:var(--gold);color:var(--ink)}
+.sc-btn.write:hover{background:var(--gold-light)}
+.sc-btn.del{color:var(--red-soft);background:#f7efef}
+.sc-btn.del:hover{background:#f0dede}
+.add-scene-btn{padding:8px 14px;border:1px dashed var(--paper-dark);border-radius:var(--radius);font-size:12px;color:var(--ink-muted);display:flex;align-items:center;gap:6px;transition:all .15s;background:none}
+.add-scene-btn:hover{border-color:var(--teal-light);color:var(--teal);background:rgba(45,110,110,.04)}
+
+/* ===== TIMELINE ===== */
+#timeline-container{flex:1;overflow:auto;padding:20px 0;background:var(--paper-dark)}
+.timeline-header{padding:0 40px 16px;display:flex;align-items:center;justify-content:space-between}
+.timeline-legend{display:flex;gap:12px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink-muted)}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.timeline-scroll{overflow-x:auto;padding:0 40px 40px}
+.timeline-track{position:relative;min-width:900px}
+.timeline-axis{height:3px;background:var(--paper-dark);border-radius:2px;margin:60px 0 8px;position:relative}
+.timeline-axis::before,.timeline-axis::after{content:'';position:absolute;top:50%;transform:translateY(-50%);width:8px;height:8px;background:var(--gold);border-radius:50%}
+.timeline-axis::before{left:-4px}
+.timeline-axis::after{right:-4px}
+.timeline-chapters-row{display:flex;gap:0;margin-bottom:0;position:relative}
+.timeline-chapter-col{flex:1;min-width:120px;border-right:1px dashed var(--paper-dark);padding:0 8px;position:relative}
+.timeline-chapter-col:last-child{border-right:none}
+.tl-ch-label{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl-scenes{display:flex;flex-direction:column;gap:6px;min-height:80px}
+.tl-scene-card{background:var(--paper);border-radius:6px;padding:8px 10px;font-size:12px;box-shadow:var(--shadow-sm);cursor:pointer;transition:all .15s;border-left:3px solid var(--gold);position:relative}
+.tl-scene-card:hover{transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.tl-scene-card .tl-sc-title{font-family:var(--font-display);font-size:13px;color:var(--ink);margin-bottom:3px}
+.tl-scene-card .tl-sc-chars{font-size:10px;color:var(--ink-muted)}
+.tl-scene-card .tl-sc-words{font-size:10px;color:var(--ink-faint);margin-top:2px}
+.tl-add-event{padding:6px 8px;border:1px dashed var(--paper-dark);border-radius:var(--radius);font-size:11px;color:var(--ink-muted);display:flex;align-items:center;gap:4px;transition:all .15s;background:none;width:100%}
+.tl-add-event:hover{border-color:var(--gold-dim);color:var(--gold)}
+
+/* ===== RELATIONSHIP GRAPH ===== */
+#rel-container{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--paper-dark)}
+.rel-toolbar{padding:12px 20px;display:flex;align-items:center;gap:10px;background:var(--paper-warm);border-bottom:1px solid var(--paper-dark);flex-shrink:0;flex-wrap:wrap}
+.rel-toolbar h4{font-family:var(--font-display);font-size:16px;color:var(--ink)}
+.rel-info{font-size:12px;color:var(--ink-muted);flex:1}
+.rel-btn{height:30px;padding:0 12px;border-radius:var(--radius);font-size:12px;font-weight:500;transition:all .15s}
+.rel-btn.add{background:var(--gold);color:var(--ink)}
+.rel-btn.add:hover{background:var(--gold-light)}
+.rel-btn.secondary{border:1px solid var(--paper-dark);color:var(--ink-muted)}
+.rel-btn.secondary:hover{border-color:var(--ink-muted);color:var(--ink)}
+#rel-canvas-wrap{flex:1;overflow:hidden;position:relative}
+#rel-canvas{display:block;cursor:grab}
+#rel-canvas.grabbing{cursor:grabbing}
+.rel-node-tooltip{position:absolute;background:var(--sidebar-bg);color:var(--paper);padding:8px 12px;border-radius:var(--radius);font-size:12px;pointer-events:none;opacity:0;transition:opacity .15s;z-index:10;max-width:200px;line-height:1.5}
+.rel-node-tooltip.visible{opacity:1}
+.rel-legend{padding:8px 16px;display:flex;gap:12px;flex-wrap:wrap;background:var(--paper-warm);border-top:1px solid var(--paper-dark);flex-shrink:0}
+.rel-legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--ink-muted)}
+.rel-legend-line{width:20px;height:2px;border-radius:1px}
+
+/* ===== CHARACTERS ===== */
+.characters-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+.char-card{background:var(--paper);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow-sm);cursor:pointer;transition:all .2s;border:1px solid transparent}
+.char-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.char-avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--teal));display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:22px;color:white;margin-bottom:12px;font-style:italic;flex-shrink:0}
+.char-card h4{font-family:var(--font-display);font-size:16px;color:var(--ink);margin-bottom:3px}
+.char-card .char-role{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--gold);margin-bottom:8px}
+.char-card .char-desc{font-family:var(--font-body);font-size:13px;color:var(--ink-muted);line-height:1.5}
+.add-card{background:transparent;border:2px dashed var(--paper-dark);border-radius:var(--radius-lg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:all .2s;min-height:160px;color:var(--ink-faint);font-size:12px}
+.add-card:hover{border-color:var(--gold-dim);color:var(--gold);background:rgba(201,168,76,.03)}
+.add-card .plus{font-size:24px}
+
+/* ===== LOCATIONS ===== */
+.locations-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.loc-card{background:var(--paper);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow-sm);cursor:pointer;transition:all .2s;border:1px solid transparent;position:relative;overflow:hidden}
+.loc-card::before{content:'';position:absolute;top:0;left:0;bottom:0;width:4px}
+.loc-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.loc-icon{font-size:28px;margin-bottom:10px}
+.loc-card h4{font-family:var(--font-display);font-size:16px;color:var(--ink);margin-bottom:4px}
+.loc-type-badge{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--teal);margin-bottom:8px}
+.loc-desc{font-family:var(--font-body);font-size:13px;color:var(--ink-muted);line-height:1.5}
+
+/* ===== CHAR DETAIL ===== */
+#view-character .view-scroll{background:var(--paper-dark)}
+.char-detail-top{display:flex;align-items:flex-start;gap:24px;margin-bottom:28px}
+.char-detail-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--teal));display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:32px;color:white;font-style:italic;flex-shrink:0}
+.char-name-input{font-family:var(--font-display);font-size:26px;color:var(--ink);border:none;border-bottom:2px solid transparent;background:transparent;width:100%;padding-bottom:4px;transition:border-color .15s}
+.char-name-input:focus{border-bottom-color:var(--gold)}
+.char-form-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+@media(max-width:900px){.char-form-grid{grid-template-columns:1fr 1fr}}
+.ff{display:flex;flex-direction:column;gap:5px}
+.ff.full{grid-column:1/-1}
+.ff.span2{grid-column:span 2}
+.ff label{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-muted)}
+.ff input,.ff textarea,.ff select{padding:8px 11px;border:1px solid var(--paper-dark);border-radius:var(--radius);font-family:var(--font-body);font-size:15px;background:var(--paper);color:var(--ink);transition:border-color .15s}
+.ff input:focus,.ff textarea:focus,.ff select:focus{border-color:var(--gold)}
+.ff textarea{resize:vertical;line-height:1.6}
+.char-section-title{font-family:var(--font-display);font-size:16px;color:var(--ink);margin:24px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--paper-dark)}
+
+/* ===== LOCATION DETAIL ===== */
+.loc-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* ===== NOTES ===== */
+.notes-area{background:var(--paper);border-radius:var(--radius-lg);padding:24px;box-shadow:var(--shadow-sm)}
+.notes-area textarea{width:100%;min-height:300px;font-family:var(--font-body);font-size:16px;line-height:1.8;color:var(--ink);background:transparent;border:none;resize:vertical}
+.notes-area textarea::placeholder{color:var(--ink-faint);font-style:italic}
+
+/* ===== EDITOR ===== */
+#view-editor{background:var(--paper-dark)}
+.editor-toolbar{background:var(--paper-warm);border-bottom:1px solid var(--paper-dark);padding:7px 16px;display:flex;align-items:center;gap:4px;flex-wrap:wrap;flex-shrink:0}
+.editor-toolbar .sep{width:1px;height:20px;background:var(--paper-dark);margin:0 3px}
+.fmt-btn{height:28px;min-width:28px;padding:0 7px;border-radius:4px;font-size:12px;color:var(--ink-soft);display:flex;align-items:center;justify-content:center;gap:4px;transition:all .1s;white-space:nowrap}
+.fmt-btn:hover{background:var(--paper-dark)}
+.fmt-btn.active{background:var(--ink);color:var(--paper)}
+.fmt-btn.bold{font-weight:700}
+.fmt-btn.italic{font-style:italic}
+.fmt-select{height:28px;padding:0 8px;border-radius:4px;border:1px solid var(--paper-dark);background:var(--paper);font-size:12px;color:var(--ink-soft);cursor:pointer}
+.editor-chapter-bar{background:var(--paper);border-bottom:1px solid var(--paper-dark);padding:12px 24px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.ch-num-inp{width:48px;height:34px;border:1px solid var(--paper-dark);border-radius:var(--radius);text-align:center;font-family:var(--font-display);font-size:16px;font-weight:600;color:var(--gold);background:var(--paper-warm);padding:0 4px;transition:border-color .15s}
+.ch-num-inp:focus{border-color:var(--gold)}
+.ch-name-inp{flex:1;height:34px;border:1px solid var(--paper-dark);border-radius:var(--radius);padding:0 12px;font-family:var(--font-display);font-size:17px;color:var(--ink);background:transparent;transition:border-color .15s}
+.ch-name-inp:focus{border-color:var(--gold)}
+.ch-name-inp::placeholder{font-style:italic;color:var(--ink-faint)}
+.sc-name-inp{width:200px;height:34px;border:1px solid var(--paper-dark);border-radius:var(--radius);padding:0 10px;font-family:var(--font-ui);font-size:13px;color:var(--ink-soft);background:transparent;transition:border-color .15s}
+.sc-name-inp:focus{border-color:var(--teal)}
+.wc-display{font-size:12px;color:var(--ink-faint);white-space:nowrap;margin-left:auto}
+.editor-scroll{flex:1;overflow-y:auto;padding:40px 20px;display:flex;justify-content:center;background:var(--paper-dark)}
+.editor-page{width:100%;max-width:680px;background:white;box-shadow:var(--shadow-page);border-radius:2px;min-height:500px}
+.editor-page-inner{padding:60px 72px}
+@media(max-width:768px){.editor-page-inner{padding:32px 24px}.editor-scroll{padding:16px 8px}}
+#editor-content{min-height:400px;font-family:var(--font-body);font-size:17px;line-height:1.9;color:#1a1410;outline:none;caret-color:var(--gold)}
+#editor-content p{margin:0;text-indent:0}
+#editor-content p+p{text-indent:0}
+.indent-mode #editor-content p+p{text-indent:1.8em}
+#editor-content:empty::before{content:attr(data-placeholder);color:#c0bab4;font-style:italic;pointer-events:none}
+
+/* ===== BUCH SCHREIBEN ===== */
+#tab-buch{overflow:hidden}
+#buch-view{display:flex;flex:1;overflow:hidden;height:100%}
+
+/* Sidebar — Desktop */
+#buch-sidebar{
+  width:220px;flex-shrink:0;
+  background:var(--paper-warm);
+  border-right:1px solid var(--paper-dark);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+#buch-sidebar-header{
+  padding:14px 16px 10px;flex-shrink:0;
+  border-bottom:1px solid var(--paper-dark);
+}
+#buch-sidebar-header h4{
+  font-family:var(--font-display);font-size:15px;color:var(--ink);margin-bottom:4px;
+}
+#buch-ch-list{flex:1;overflow-y:auto;padding:8px}
+
+/* Sidebar action buttons */
+#buch-sidebar-actions{
+  padding:6px 8px 10px;
+  display:flex;flex-direction:column;gap:4px;
+  flex-shrink:0;
+  border-top:1px solid var(--paper-dark);
+}
+#buch-add-prolog,#buch-add-ch{
+  padding:7px;border:1px dashed var(--paper-dark);border-radius:var(--radius);
+  font-size:11px;color:var(--ink-muted);
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  transition:all .15s;background:none;width:100%;cursor:pointer;
+}
+#buch-add-prolog:hover,#buch-add-ch:hover{border-color:var(--gold-dim);color:var(--gold)}
+#buch-word-btn{
+  padding:7px;background:var(--gold);border-radius:var(--radius);
+  font-size:11px;color:var(--ink);font-weight:500;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+  transition:all .15s;width:100%;cursor:pointer;border:none;
+}
+#buch-word-btn:hover{background:var(--gold-light)}
+.buch-ch-item{padding:9px 12px;border-radius:var(--radius);cursor:pointer;transition:all .15s;border:1px solid transparent;margin-bottom:3px}
+.buch-ch-item:hover{background:var(--paper-dark)}
+.buch-ch-item.active{background:var(--paper);border-color:var(--paper-dark);box-shadow:var(--shadow-sm)}
+.buch-ch-item .bch-num{font-family:var(--font-display);font-size:11px;color:var(--gold);font-weight:600;margin-bottom:2px}
+.buch-ch-item .bch-title{font-size:13px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.buch-ch-item .bch-wc{font-size:10px;color:var(--ink-faint);margin-top:2px}
+.buch-ch-item.active .bch-title{color:var(--ink);font-weight:500}
+#buch-main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+#buch-toolbar{background:var(--paper-warm);border-bottom:1px solid var(--paper-dark);padding:7px 16px;display:flex;align-items:center;gap:4px;flex-wrap:wrap;flex-shrink:0}
+#buch-toolbar .sep{width:1px;height:20px;background:var(--paper-dark);margin:0 3px}
+#buch-chapter-bar{background:var(--paper);border-bottom:1px solid var(--paper-dark);padding:10px 24px;flex-shrink:0;display:flex;align-items:center;gap:12px}
+#buch-ch-num-inp{width:48px;height:34px;border:1px solid var(--paper-dark);border-radius:var(--radius);text-align:center;font-family:var(--font-display);font-size:16px;font-weight:600;color:var(--gold);background:var(--paper-warm);padding:0 4px;transition:border-color .15s}
+#buch-ch-num-inp:focus{border-color:var(--gold)}
+#buch-ch-name-inp{flex:1;height:34px;border:none;border-bottom:2px solid var(--paper-dark);padding:0 4px;font-family:var(--font-display);font-size:20px;color:var(--ink);background:transparent;transition:border-color .15s}
+#buch-ch-name-inp:focus{outline:none;border-bottom-color:var(--gold)}
+#buch-ch-name-inp::placeholder{font-style:italic;color:var(--ink-faint)}
+
+/* A4 area */
+#buch-scroll{flex:1;overflow-y:auto;padding:32px 20px 60px;background:#bdb5ac;display:none;flex-direction:column;align-items:center;gap:24px}
+
+/* DIN A4: 210×297mm at 96dpi = 794×1123px */
+.a4-page{width:794px;min-height:1123px;background:white;box-shadow:0 2px 20px rgba(0,0,0,.28),0 0 0 1px rgba(0,0,0,.07);position:relative;flex-shrink:0;box-sizing:border-box}
+.a4-body{padding:94px 100px 80px;min-height:1123px;box-sizing:border-box}
+.a4-page.a4-first .a4-body{padding-top:50px}
+
+/* Heading */
+.a4-heading{font-family:var(--font-display);margin-bottom:40px;padding-bottom:16px;border-bottom:1px solid #e8e0d8}
+.a4-heading .a4-ch-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:var(--gold);margin-bottom:6px}
+.a4-heading .a4-ch-name{font-size:26px;color:var(--ink);line-height:1.25}
+.a4-heading.prolog-heading .a4-ch-label{color:var(--teal)}
+
+/* EDITOR directly on page — cursor + selection fully visible */
+.a4-editor{
+  min-height:200px;
+  font-family:'Crimson Pro',Georgia,serif;
+  font-size:17px;line-height:1.9;
+  color:#1a1410;
+  outline:none;
+  caret-color:#c9a84c;
+  word-wrap:break-word;
+  overflow-wrap:break-word;
+}
+.a4-editor p{margin:0;text-indent:0}
+.a4-editor p+p{text-indent:0}
+.buch-indent .a4-editor p+p{text-indent:1.8em}
+.a4-editor:empty::before{content:'Schreibe hier …';color:#c8c0b8;font-style:italic;pointer-events:none}
+.a4-editor ::selection{background:rgba(201,168,76,.28)}
+
+/* Page footer */
+.a4-footer{position:absolute;bottom:32px;left:0;right:0;text-align:center;font-family:var(--font-display);font-size:11px;color:#c0b8b0;font-style:italic;letter-spacing:.04em;pointer-events:none}
+
+/* Responsive */
+@media(max-width:900px){.a4-page{width:100%}.a4-body{padding:60px 40px 60px}.a4-page.a4-first .a4-body{padding-top:40px}}
+@media(max-width:768px){#buch-scroll{padding:16px 8px 40px}#buch-sidebar{width:170px}.a4-body{padding:40px 24px 50px}}
+
+#buch-empty{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;color:var(--ink-muted);padding:40px}
+#buch-empty .icon{font-size:40px;opacity:.3}
+#buch-empty p{font-family:var(--font-body);font-size:16px;text-align:center}
+#buch-stats{padding:6px 16px;background:var(--paper-warm);border-top:1px solid var(--paper-dark);font-size:11px;color:var(--ink-muted);display:flex;gap:16px;flex-shrink:0}
+#buch-stats span b{color:var(--ink-soft)}
+
+/* ===== SETTINGS ===== */
+.spine-color-swatch{
+  width:28px;height:28px;border-radius:4px;cursor:pointer;
+  border:2px solid transparent;transition:all .15s;flex-shrink:0;
+}
+.spine-color-swatch:hover{transform:scale(1.15)}
+.spine-color-swatch.selected{border-color:var(--gold);transform:scale(1.1)}
+.settings-card{background:var(--paper);border-radius:var(--radius-lg);padding:24px;box-shadow:var(--shadow-sm);max-width:560px;margin-bottom:20px}
+.settings-card h4{font-family:var(--font-display);font-size:18px;margin-bottom:20px}
+.sf{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.sf label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-muted)}
+.sf input,.sf textarea,.sf select{padding:9px 12px;border:1px solid var(--paper-dark);border-radius:var(--radius);font-family:var(--font-body);font-size:15px;background:var(--paper-warm);color:var(--ink);transition:border-color .15s}
+.sf input:focus,.sf textarea:focus,.sf select:focus{border-color:var(--gold)}
+.sf textarea{resize:vertical;line-height:1.6}
+
+/* ===== MODALS ===== */
+.modal-overlay{position:fixed;inset:0;background:rgba(26,20,16,.6);display:flex;align-items:center;justify-content:center;z-index:1000;padding:16px;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--paper);border-radius:var(--radius-lg);padding:28px;width:100%;max-width:500px;box-shadow:var(--shadow-lg);transform:translateY(8px);transition:transform .2s;max-height:90vh;overflow-y:auto}
+.modal-overlay.open .modal{transform:translateY(0)}
+.modal h3{font-family:var(--font-display);font-size:22px;color:var(--ink);margin-bottom:20px}
+.modal .mf{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.modal .mf label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-muted)}
+.modal .mf input,.modal .mf textarea,.modal .mf select{padding:8px 11px;border:1px solid var(--paper-dark);border-radius:var(--radius);font-family:var(--font-body);font-size:15px;background:var(--paper-warm);color:var(--ink);transition:border-color .15s}
+.modal .mf input:focus,.modal .mf textarea:focus{border-color:var(--gold)}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}
+.btn-cancel{padding:8px 16px;border:1px solid var(--paper-dark);border-radius:var(--radius);font-size:13px;color:var(--ink-muted);transition:all .1s}
+.btn-cancel:hover{border-color:var(--ink-muted);color:var(--ink)}
+.btn-ok{padding:8px 20px;background:var(--gold);border-radius:var(--radius);font-size:13px;font-weight:500;color:var(--ink);transition:all .1s}
+.btn-ok:hover{background:var(--gold-light)}
+
+/* Relationship modal */
+.rel-type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:4px}
+.rel-type-btn{padding:8px 6px;border:2px solid var(--paper-dark);border-radius:var(--radius);font-size:12px;text-align:center;cursor:pointer;transition:all .15s;background:var(--paper-warm)}
+.rel-type-btn:hover{border-color:var(--ink-muted)}
+.rel-type-btn.selected{border-color:var(--gold);background:rgba(201,168,76,.1);color:var(--ink)}
+
+/* ===== TOAST ===== */
+#toast{position:fixed;bottom:20px;right:20px;background:var(--sidebar-bg);color:var(--paper);padding:10px 18px;border-radius:var(--radius);font-size:13px;box-shadow:var(--shadow-lg);z-index:2000;opacity:0;transform:translateY(8px);transition:all .25s;pointer-events:none;border-left:3px solid var(--gold)}
+#toast.show{opacity:1;transform:translateY(0)}
+#toast.success{border-left-color:#5a9a5a}
+#toast.error{border-left-color:var(--red-soft)}
+
+/* ===== EMPTY STATES ===== */
+.empty-state{text-align:center;padding:60px 24px;color:var(--ink-muted)}
+.empty-state .icon{font-size:40px;margin-bottom:12px;opacity:.4}
+.empty-state h4{font-family:var(--font-display);font-size:18px;color:var(--ink-soft);margin-bottom:6px}
+.empty-state p{font-family:var(--font-body);font-size:15px;line-height:1.6}
+
+/* ===== SPELLCHECK ===== */
+.lt-error{border-bottom:2px solid #e05050;cursor:pointer;position:relative}
+.lt-error.lt-style{border-bottom-color:#c9a84c}
+.lt-error.lt-grammar{border-bottom-color:#2d6e6e}
+.lt-error:hover{background:rgba(224,80,80,.08)}
+
+#spellcheck-panel{
+  position:fixed;bottom:0;right:0;width:340px;max-height:420px;
+  background:var(--paper);border-radius:var(--radius-lg) 0 0 0;
+  box-shadow:var(--shadow-lg);z-index:500;
+  display:none;flex-direction:column;
+  border-top:1px solid var(--paper-dark);border-left:1px solid var(--paper-dark);
+}
+#spellcheck-panel.open{display:flex}
+.sp-header{padding:14px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--paper-dark);flex-shrink:0}
+.sp-header h4{font-family:var(--font-display);font-size:15px;flex:1}
+.sp-close{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:4px;color:var(--ink-muted);transition:all .1s}
+.sp-close:hover{background:var(--paper-dark);color:var(--ink)}
+.sp-status{padding:8px 16px;font-size:12px;color:var(--ink-muted);border-bottom:1px solid var(--paper-dark);flex-shrink:0;display:flex;align-items:center;gap:8px}
+.sp-spinner{width:12px;height:12px;border:2px solid var(--paper-dark);border-top-color:var(--gold);border-radius:50%;animation:spin .6s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.sp-errors-list{flex:1;overflow-y:auto;padding:8px}
+.sp-error-item{padding:10px 12px;border-radius:var(--radius);margin-bottom:6px;cursor:pointer;transition:all .15s;border:1px solid var(--paper-dark)}
+.sp-error-item:hover{border-color:var(--ink-faint);box-shadow:var(--shadow-sm)}
+.sp-error-item.sp-active{border-color:var(--gold);background:rgba(201,168,76,.05)}
+.sp-error-word{font-family:var(--font-body);font-size:15px;color:var(--red-soft);font-weight:500;margin-bottom:3px}
+.sp-error-word.sp-style{color:var(--gold)}
+.sp-error-word.sp-grammar{color:var(--teal)}
+.sp-error-msg{font-size:11px;color:var(--ink-muted);margin-bottom:8px;line-height:1.4}
+.sp-suggestions{display:flex;flex-wrap:wrap;gap:4px}
+.sp-sug-btn{padding:3px 10px;border:1px solid var(--paper-dark);border-radius:20px;font-size:12px;font-family:var(--font-body);color:var(--ink-soft);transition:all .1s;background:var(--paper-warm)}
+.sp-sug-btn:hover{border-color:var(--gold);background:rgba(201,168,76,.1);color:var(--ink)}
+.sp-ignore-btn{padding:3px 10px;font-size:11px;color:var(--ink-faint);transition:all .1s}
+.sp-ignore-btn:hover{color:var(--ink-muted)}
+.sp-summary{display:flex;gap:12px;padding:8px 16px;border-top:1px solid var(--paper-dark);flex-shrink:0}
+.sp-count{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--ink-muted)}
+.sp-dot{width:8px;height:8px;border-radius:50%}
+.sp-empty{text-align:center;padding:32px 16px;color:var(--ink-muted)}
+.sp-empty .sp-ok-icon{font-size:28px;margin-bottom:8px}
+.sp-lang-select{height:24px;padding:0 6px;border-radius:4px;border:1px solid var(--paper-dark);background:var(--paper);font-size:11px;color:var(--ink-soft)}
+
+/* ===== RESPONSIVE ===== */
+#mobile-menu-btn{display:none}
+
+/* =============================================
+   MOBILE — vollständig überarbeitetes Layout
+   ============================================= */
+@media(max-width:768px){
+
+  /* Topbar kompakter */
+  #topbar{padding:0 10px;gap:8px}
+  #topbar .logo{font-size:16px}
+  #topbar .breadcrumb{display:none}
+  #topbar-actions .tb-btn{height:28px;padding:0 8px;font-size:11px}
+  /* Import verstecken auf sehr kleinen Screens */
+  #topbar-actions #btn-export{display:none!important}
+  #mobile-menu-btn{display:flex;width:36px;height:36px;align-items:center;justify-content:center;color:var(--gold);font-size:20px;border-radius:var(--radius)}
+
+  /* Sidebar: fullscreen overlay */
+  :root{--sidebar-w:100%}
+  #sidebar{position:fixed;inset:var(--topbar-h) 0 0 0;z-index:90;transform:translateX(-100%);transition:transform .25s;width:100%}
+  #sidebar.open{transform:translateX(0)}
+
+  /* Dashboard: single column */
+  .view-scroll{padding:16px 14px}
+  .projects-grid{grid-template-columns:1fr}
+  .project-header{flex-direction:column;gap:12px}
+  .project-tabs{width:100%;overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch}
+  .project-tab{white-space:nowrap;flex-shrink:0;font-size:11px;padding:6px 10px}
+
+  /* Project header */
+  #view-project > div:first-child{padding:14px 16px 0}
+  .project-header h2{font-size:20px}
+  .project-header > div:last-child{gap:6px}
+  .project-header .tb-btn{height:28px;padding:0 8px;font-size:11px}
+
+  /* Tab content */
+  .tab-scroll{padding:12px 14px 80px}
+
+  /* Storyboard */
+  .chapter-header{padding:12px 14px}
+  .ch-actions .ch-btn{height:26px;padding:0 8px;font-size:10px}
+
+  /* Characters grid */
+  .characters-grid{grid-template-columns:1fr 1fr}
+  .locations-grid{grid-template-columns:1fr}
+
+  /* Settings card */
+  .settings-card{max-width:100%}
+
+  /* ============================
+     BUCH SCHREIBEN — MOBILE
+     ============================ */
+  #buch-view{flex-direction:column}
+
+  /* Sidebar becomes a full-width panel at top */
+  #buch-sidebar{
+    width:100%;height:auto;
+    border-right:none;
+    border-bottom:2px solid var(--paper-dark);
+    flex-direction:column;flex-shrink:0;
+    max-height:none;overflow:visible;
+  }
+  #buch-sidebar-header{
+    padding:10px 14px 6px;
+    display:flex;align-items:center;justify-content:space-between;
+    border-bottom:none;
+  }
+  #buch-sidebar-header h4{margin-bottom:0;font-size:14px}
+
+  /* Chapter list: horizontal scroll strip */
+  #buch-ch-list{
+    flex:none;
+    display:flex;flex-direction:row;
+    overflow-x:auto;overflow-y:hidden;
+    padding:0 10px 8px;
+    gap:8px;
+    -webkit-overflow-scrolling:touch;
+    max-height:none;
+    scrollbar-width:thin;
+  }
+  #buch-ch-list::-webkit-scrollbar{height:3px}
+  .buch-ch-item{
+    flex-shrink:0;min-width:110px;max-width:150px;
+    padding:8px 10px;
+  }
+  .buch-ch-item .bch-title{
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;
+  }
+  .buch-ch-item .bch-num{font-size:10px}
+  .buch-ch-item .bch-wc{font-size:9px}
+
+  /* Action buttons: horizontal row below chapter list */
+  #buch-sidebar-actions{
+    flex-direction:row;
+    padding:6px 10px 10px;
+    border-top:1px solid var(--paper-dark);
+    gap:6px;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+  #buch-add-prolog,#buch-add-ch{
+    flex-shrink:0;white-space:nowrap;
+    width:auto;min-width:90px;
+    padding:7px 10px;font-size:11px;
+  }
+  #buch-word-btn{
+    flex-shrink:0;white-space:nowrap;
+    width:auto;padding:7px 12px;font-size:11px;
+  }
+
+  /* Toolbar: sticky, compact */
+  #buch-toolbar{
+    padding:5px 8px;gap:4px;
+    flex-wrap:wrap;
+    position:sticky;top:0;z-index:20;
+    background:var(--paper-warm);
+  }
+  #buch-toolbar .fmt-btn{height:34px;min-width:34px;font-size:14px;padding:0 8px}
+  #buch-toolbar .fmt-select{height:32px;font-size:11px;padding:0 4px;max-width:110px}
+  #buch-toolbar .sp-lang-select{height:32px;font-size:11px;max-width:60px}
+  #buch-toolbar .sep{height:16px}
+
+  /* Chapter name bar */
+  #buch-chapter-bar{padding:8px 12px;gap:8px;flex-wrap:nowrap}
+  #mobile-back-btn{display:flex!important;flex-shrink:0;font-size:12px;color:var(--ink-muted);white-space:nowrap;padding:0;background:none;border:none;cursor:pointer}
+  #buch-ch-num-inp{width:40px;height:30px;font-size:14px}
+  #buch-ch-name-inp{height:30px;font-size:16px;flex:1;min-width:0}
+
+  /* Writing area: full width, no A4 simulation */
+  #buch-scroll{
+    padding:0;background:white;
+    flex:1;overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    display:none;
+  }
+  #buch-scroll.active-mobile{display:flex!important;flex-direction:column}
+
+  /* A4 page → plain writing area on mobile */
+  .a4-page{
+    width:100%;min-height:0;
+    box-shadow:none;background:white;border-radius:0;
+  }
+  .a4-body{
+    padding:20px 18px 80px;
+    min-height:calc(100svh - 260px);
+  }
+  .a4-page.a4-first .a4-body{padding-top:16px}
+  .a4-footer{display:none}
+  .a4-heading{margin-bottom:16px;padding-bottom:12px}
+  .a4-heading .a4-ch-label{font-size:10px}
+  .a4-heading .a4-ch-name{font-size:20px}
+
+  /* Editor — large and comfortable */
+  .a4-editor{
+    font-size:18px!important;
+    line-height:1.85!important;
+    min-height:50vh;
+  }
+
+  /* When in mobile writing mode: hide chapter strip, show full editor */
+  #buch-view.mobile-writing #buch-sidebar{display:none!important}
+  #buch-view.mobile-writing #buch-main{
+    position:fixed;inset:var(--topbar-h) 0 0 0;
+    z-index:80;background:white;
+    display:flex;flex-direction:column;
+    overflow:hidden;
+  }
+  #buch-view.mobile-writing #buch-scroll{
+    display:flex!important;flex-direction:column;
+    flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  }
+  #buch-view.mobile-writing .a4-body{
+    min-height:calc(100svh - 180px);
+  }
+
+  /* Stats bar */
+  #buch-stats{font-size:10px;gap:8px;padding:5px 10px}
+
+  /* Spellcheck panel full width */
+  #spellcheck-panel{width:100%;left:0;right:0;border-radius:var(--radius-lg) var(--radius-lg) 0 0}
+
+  /* Char forms */
+  .char-form-grid{grid-template-columns:1fr}
+  .char-form-grid .ff.span2{grid-column:1}
+
+  /* Scene editor */
+  .editor-toolbar{padding:5px 8px;gap:3px;flex-wrap:wrap}
+  .editor-chapter-bar{padding:8px 12px;gap:8px;flex-wrap:wrap}
+  .editor-scroll{padding:12px 6px 60px}
+  .editor-page-inner{padding:24px 18px}
+
+  /* Modal */
+  .modal{padding:20px 16px}
+
+  /* Toast */
+  #toast{left:16px;right:16px;width:auto;text-align:center;transform:translateY(8px)}
+  #toast.show{transform:translateY(0)}
+}
+
+/* ===== MOBILE NAV MENU ===== */
+#sidebar-mobile-header{
+  display:none; /* hidden on desktop */
+}
+#sidebar-mobile-nav{
+  display:none; /* hidden on desktop */
+}
+.smn-section{
+  font-size:10px;font-weight:600;text-transform:uppercase;
+  letter-spacing:.12em;color:var(--ink-muted);
+  padding:16px 18px 6px;
+}
+.smn-item{
+  display:flex;align-items:center;gap:14px;
+  width:100%;padding:13px 18px;
+  font-size:15px;color:var(--paper);
+  background:none;border:none;cursor:pointer;
+  text-align:left;font-family:var(--font-ui);
+  transition:background .12s;
+  border-bottom:1px solid rgba(255,255,255,.04);
+}
+.smn-item:hover,.smn-item:active{background:rgba(201,168,76,.12)}
+.smn-item .smn-icon{
+  font-size:18px;width:24px;text-align:center;flex-shrink:0;
+}
+.smn-item.smn-gold{
+  color:var(--gold);font-weight:500;
+}
+.smn-item.smn-gold .smn-icon{color:var(--gold)}
+
+@media(max-width:768px){
+  /* Show mobile header & nav, hide desktop tabs */
+  #sidebar-mobile-header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 18px 12px;
+    border-bottom:1px solid #2e2820;
+    flex-shrink:0;
+  }
+  #sidebar-mobile-nav{
+    display:flex;flex-direction:column;
+    flex:1;overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+  #sidebar-nav{display:none}
+  #sidebar-content{display:none}
+}
+
+/* Mobile fullscreen write mode */
+@media(max-width:768px){
+  #buch-view.mobile-writing #buch-sidebar{display:none}
+  #buch-view.mobile-writing #buch-main{position:fixed;inset:var(--topbar-h) 0 0 0;z-index:80;background:white;display:flex;flex-direction:column}
+  #buch-view.mobile-writing #buch-scroll{display:flex!important}
+  #buch-view.mobile-writing .a4-body{min-height:calc(100vh - 200px)}
+  #mobile-back-btn{display:none}
+}
+@media(max-width:768px){
+  #mobile-back-btn.visible{display:flex!important;align-items:center;gap:6px;padding:8px 12px;background:var(--paper-warm);border-bottom:1px solid var(--paper-dark);font-size:13px;color:var(--ink-muted);flex-shrink:0;cursor:pointer}
+  #mobile-back-btn.visible:hover{color:var(--ink)}
+}
+
+/* Extra-small phones */
+@media(max-width:380px){
+  .a4-editor{font-size:17px!important}
+  .a4-body{padding:16px 14px 60px}
+  #buch-ch-list{padding:0 8px 8px}
+  .buch-ch-item{min-width:100px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <button id="mobile-menu-btn" onclick="toggleMobile()">☰</button>
+  <div class="logo">Schreibstudio</div>
+  <div class="breadcrumb" id="breadcrumb"><span>Projekte</span></div>
+  <div id="topbar-actions">
+    <button class="tb-btn ghost" onclick="importProject()">⬆ Import</button>
+    <button class="tb-btn ghost" id="btn-export" onclick="exportProject()" style="display:none">⬇ JSON</button>
+    <button class="tb-btn ghost" id="btn-drive-save" onclick="driveSave()" style="display:none" title="In Google Drive speichern">☁ Speichern</button>
+    <button class="tb-btn ghost" id="btn-drive-load" onclick="driveLoadModal()" style="display:none" title="Aus Google Drive laden">☁ Laden</button>
+    <button class="tb-btn primary" id="btn-new" onclick="openModal('modal-project')">+ Neues Projekt</button>
+  </div>
+</div>
+
+<div id="main-body">
+<!-- SIDEBAR -->
+<div id="sidebar">
+
+  <!-- Mobile nav header -->
+  <div id="sidebar-mobile-header">
+    <div style="font-family:var(--font-display);font-size:16px;font-style:italic;color:var(--gold)">Schreibstudio</div>
+    <button onclick="closeMobile()" style="color:var(--ink-faint);font-size:20px;line-height:1;background:none;border:none;cursor:pointer">✕</button>
+  </div>
+
+  <!-- Mobile: Schnellnavigation -->
+  <div id="sidebar-mobile-nav">
+    <div class="smn-section">Übersicht</div>
+    <button class="smn-item" onclick="showDashboard();closeMobile()">
+      <span class="smn-icon">🏠</span><span>Alle Projekte</span>
+    </button>
+    <button class="smn-item" onclick="openModal('modal-project');closeMobile()">
+      <span class="smn-icon">＋</span><span>Neues Projekt</span>
+    </button>
+    <button class="smn-item" onclick="importProject();closeMobile()">
+      <span class="smn-icon">⬆</span><span>Projekt importieren</span>
+    </button>
+
+    <div class="smn-section" id="smn-proj-section" style="display:none">Aktuelles Projekt</div>
+    <div id="smn-proj-items" style="display:none">
+      <button class="smn-item" onclick="showProject();mobileGoTab('storyboard')">
+        <span class="smn-icon">📋</span><span>Storyboard</span>
+      </button>
+      <button class="smn-item" onclick="showProject();mobileGoTab('buch')">
+        <span class="smn-icon">✍️</span><span>Buch schreiben</span>
+      </button>
+      <button class="smn-item" onclick="showProject();mobileGoTab('timeline')">
+        <span class="smn-icon">🕐</span><span>Timeline</span>
+      </button>
+      <button class="smn-item" onclick="showProject();mobileGoTab('beziehungen')">
+        <span class="smn-icon">🔗</span><span>Beziehungsgraph</span>
+      </button>
+      <button class="smn-item" onclick="showProject();mobileGoTab('characters')">
+        <span class="smn-icon">👤</span><span>Figuren</span>
+      </button>
+      <button class="smn-item" onclick="showProject();mobileGoTab('orte')">
+        <span class="smn-icon">📍</span><span>Orte</span>
+      </button>
+      <button class="smn-item" onclick="showProject();mobileGoTab('notes')">
+        <span class="smn-icon">📝</span><span>Notizen</span>
+      </button>
+      <button class="smn-item" onclick="showProject();mobileGoTab('settings')">
+        <span class="smn-icon">⚙️</span><span>Einstellungen & Buchrücken</span>
+      </button>
+    </div>
+
+    <div class="smn-section" id="smn-proj-actions" style="display:none">Aktionen</div>
+    <div id="smn-action-items" style="display:none">
+      <button class="smn-item" onclick="openAddChapterModal();closeMobile()">
+        <span class="smn-icon">＋</span><span>Kapitel hinzufügen</span>
+      </button>
+      <button class="smn-item" onclick="openAddCharModal();closeMobile()">
+        <span class="smn-icon">＋</span><span>Figur hinzufügen</span>
+      </button>
+      <button class="smn-item" onclick="openAddOrtModal();closeMobile()">
+        <span class="smn-icon">＋</span><span>Ort hinzufügen</span>
+      </button>
+      <button class="smn-item smn-gold" onclick="buchExportWord();closeMobile()">
+        <span class="smn-icon">⬇</span><span>Als Word speichern</span>
+      </button>
+      <button class="smn-item" onclick="exportProject();closeMobile()">
+        <span class="smn-icon">⬇</span><span>Projekt exportieren (JSON)</span>
+      </button>
+      <button class="smn-item" id="smn-drive-save" style="display:none" onclick="driveSave();closeMobile()">
+        <span class="smn-icon">☁</span><span>In Google Drive speichern</span>
+      </button>
+      <button class="smn-item" id="smn-drive-load" style="display:none" onclick="driveLoadModal();closeMobile()">
+        <span class="smn-icon">☁</span><span>Aus Google Drive laden</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Desktop tabs (hidden on mobile) -->
+  <div id="sidebar-nav">
+    <button class="nav-tab active" onclick="sbTab('structure',this)">Struktur</button>
+    <button class="nav-tab" onclick="sbTab('chars',this)">Figuren</button>
+    <button class="nav-tab" onclick="sbTab('orte',this)">Orte</button>
+  </div>
+  <div id="sidebar-content">
+    <div class="sidebar-panel active" id="sp-structure">
+      <div class="sidebar-section-title">Kapitel & Szenen</div>
+      <div id="sb-structure-list"></div>
+      <button class="sidebar-add-btn" onclick="openAddChapterModal()">+ Kapitel</button>
+    </div>
+    <div class="sidebar-panel" id="sp-chars">
+      <div class="sidebar-section-title">Figuren</div>
+      <div id="sb-chars-list"></div>
+      <button class="sidebar-add-btn" id="sb-add-char" style="display:none" onclick="openAddCharModal()">+ Figur</button>
+    </div>
+    <div class="sidebar-panel" id="sp-orte">
+      <div class="sidebar-section-title">Orte</div>
+      <div id="sb-orte-list"></div>
+      <button class="sidebar-add-btn" id="sb-add-ort" style="display:none" onclick="openAddOrtModal()">+ Ort</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div id="content">
+
+  <!-- DASHBOARD -->
+  <div class="view active" id="view-dashboard">
+    <div class="view-scroll">
+      <div class="dashboard-header">
+        <h1>Meine Projekte</h1>
+        <p>Wähle ein Projekt oder lege ein neues an.</p>
+      </div>
+      <div class="projects-grid" id="projects-grid"></div>
+    </div>
+  </div>
+
+  <!-- PROJECT VIEW -->
+  <div class="view" id="view-project">
+    <div style="padding:24px 40px 0;flex-shrink:0;background:var(--paper-dark)">
+      <div class="project-header">
+        <div>
+          <h2 id="proj-title"></h2>
+          <div class="meta" id="proj-meta"></div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="tb-btn ghost" onclick="openAddChapterModal()">+ Kapitel</button>
+          <button class="tb-btn ghost" onclick="openAddCharModal()">+ Figur</button>
+          <button class="tb-btn ghost" onclick="openAddOrtModal()">+ Ort</button>
+        </div>
+      </div>
+      <div class="project-tabs">
+        <button class="project-tab active" onclick="projTab('storyboard',this)">Storyboard</button>
+        <button class="project-tab" onclick="projTab('buch',this)">✍ Buch schreiben</button>
+        <button class="project-tab" onclick="projTab('timeline',this)">Timeline</button>
+        <button class="project-tab" onclick="projTab('beziehungen',this)">Beziehungen</button>
+        <button class="project-tab" onclick="projTab('characters',this)">Figuren</button>
+        <button class="project-tab" onclick="projTab('orte',this)">Orte</button>
+        <button class="project-tab" onclick="projTab('notes',this)">Notizen</button>
+        <button class="project-tab" onclick="projTab('settings',this)">⚙</button>
+      </div>
+    </div>
+
+    <!-- STORYBOARD TAB -->
+    <div class="tab-content active" id="tab-storyboard">
+      <div class="tab-scroll" style="padding:16px 40px 40px">
+        <div id="storyboard-grid"></div>
+      </div>
+    </div>
+
+    <!-- BUCH SCHREIBEN TAB -->
+    <div class="tab-content" id="tab-buch">
+      <div id="buch-view">
+
+        <!-- Chapter list sidebar / mobile chapter strip -->
+        <div id="buch-sidebar">
+
+          <!-- Header (nur Desktop) -->
+          <div id="buch-sidebar-header">
+            <h4>Inhalt</h4>
+            <div id="buch-total-wc" style="font-size:11px;color:var(--ink-muted)">0 Wörter gesamt</div>
+          </div>
+
+          <!-- Kapitel-Liste — Desktop: vertikal, Mobile: horizontal scrollbar -->
+          <div id="buch-ch-list"></div>
+
+          <!-- Action Buttons -->
+          <div id="buch-sidebar-actions">
+            <button id="buch-add-prolog" onclick="buchAddProlog()">+ Prolog</button>
+            <button id="buch-add-ch" onclick="buchAddChapter()">+ Kapitel</button>
+            <button id="buch-word-btn" onclick="buchExportWord()">⬇ Als Word speichern</button>
+          </div>
+
+        </div>
+
+        <!-- Writing area -->
+        <div id="buch-main">
+
+          <!-- Toolbar -->
+          <div id="buch-toolbar">
+            <button class="fmt-btn bold" onclick="buchFmt('bold')">B</button>
+            <button class="fmt-btn italic" onclick="buchFmt('italic')">I</button>
+            <button class="fmt-btn" onclick="buchFmt('underline')"><u>U</u></button>
+            <div class="sep"></div>
+            <select class="fmt-select" id="buch-sel-size" onchange="buchSetSize(this.value)">
+              <option value="13">Klein</option>
+              <option value="15">Mittel</option>
+              <option value="17" selected>Normal</option>
+              <option value="19">Groß</option>
+            </select>
+            <select class="fmt-select" id="buch-sel-font" onchange="buchSetFont(this.value)">
+              <option value="'Crimson Pro',Georgia,serif">Crimson Pro</option>
+              <option value="Georgia,serif">Georgia</option>
+              <option value="'Palatino Linotype',Palatino,serif">Palatino</option>
+              <option value="'Times New Roman',Times,serif">Times New Roman</option>
+            </select>
+            <select class="fmt-select" id="buch-sel-lh" onchange="buchSetLH(this.value)">
+              <option value="1.6">Eng</option>
+              <option value="1.9" selected>Normal</option>
+              <option value="2.2">Weit</option>
+              <option value="2.5">Sehr weit</option>
+            </select>
+            <div class="sep"></div>
+            <button class="fmt-btn" id="buch-btn-indent" onclick="buchToggleIndent()">⇥</button>
+            <div class="sep"></div>
+            <select class="sp-lang-select" id="buch-lt-lang">
+              <option value="de-DE">🇩🇪 DE</option>
+              <option value="de-AT">🇦🇹 AT</option>
+              <option value="de-CH">🇨🇭 CH</option>
+              <option value="en-US">🇺🇸 EN</option>
+              <option value="en-GB">🇬🇧 UK</option>
+              <option value="fr">🇫🇷 FR</option>
+              <option value="es">🇪🇸 ES</option>
+            </select>
+            <button class="fmt-btn" onclick="buchSpellcheck()">✓</button>
+            <div class="sep"></div>
+            <span style="font-size:12px;color:var(--ink-faint);white-space:nowrap" id="buch-wc">0 Wörter</span>
+          </div>
+
+          <!-- Chapter name bar -->
+          <div id="buch-chapter-bar" style="display:none">
+            <button id="mobile-back-btn" onclick="buchMobileBack()">← Kapitel</button>
+            <input type="number" id="buch-ch-num-inp" placeholder="1" min="1" oninput="buchSaveMeta()">
+            <input type="text" id="buch-ch-name-inp" placeholder="Kapitelname …" oninput="buchSaveMeta()">
+          </div>
+
+          <!-- Empty state -->
+          <div id="buch-empty">
+            <div class="icon">📖</div>
+            <p>Wähle ein Kapitel aus der Liste<br>oder lege ein neues an.</p>
+            <button class="tb-btn primary" onclick="buchAddChapter()" style="margin-top:8px">+ Erstes Kapitel</button>
+          </div>
+
+          <!-- A4 / Writing area -->
+          <div id="buch-scroll"></div>
+
+          <!-- Stats bar -->
+          <div id="buch-stats" style="display:none">
+            <span>Kapitel: <b id="buch-stat-ch">—</b></span>
+            <span>Wörter: <b id="buch-stat-wc-ch">0</b></span>
+            <span>Seiten: <b id="buch-stat-pages">1</b></span>
+            <span>Gesamt: <b id="buch-stat-wc-total">0</b></span>
+          </div>
+
+        </div><!-- /buch-main -->
+      </div><!-- /buch-view -->
+    </div>
+
+    <!-- TIMELINE TAB -->
+    <div class="tab-content" id="tab-timeline">
+      <div id="timeline-container">
+        <div class="timeline-header">
+          <div>
+            <div style="font-family:var(--font-display);font-size:18px;color:var(--ink);margin-bottom:4px">Zeitstrahl</div>
+            <div style="font-size:12px;color:var(--ink-muted)">Szenen und Ereignisse im zeitlichen Verlauf — je Kapitel eine Spalte</div>
+          </div>
+          <div class="timeline-legend" id="tl-legend"></div>
+        </div>
+        <div class="timeline-scroll">
+          <div class="timeline-track" id="tl-track"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BEZIEHUNGEN TAB -->
+    <div class="tab-content" id="tab-beziehungen">
+      <div id="rel-container">
+        <div class="rel-toolbar">
+          <h4>Beziehungsgraph</h4>
+          <div class="rel-info">Ziehe Knoten. Klicke zwei Figuren an, um eine Verbindung zu ziehen.</div>
+          <button class="rel-btn secondary" onclick="resetRelLayout()">⟳ Layout</button>
+          <button class="rel-btn add" onclick="openAddRelModal()">+ Verbindung</button>
+        </div>
+        <div id="rel-canvas-wrap">
+          <canvas id="rel-canvas"></canvas>
+          <div class="rel-node-tooltip" id="rel-tooltip"></div>
+        </div>
+        <div class="rel-legend">
+          <div class="rel-legend-item"><div class="rel-legend-line" style="background:#c9a84c"></div>Familie</div>
+          <div class="rel-legend-item"><div class="rel-legend-line" style="background:#e84393"></div>Liebe</div>
+          <div class="rel-legend-item"><div class="rel-legend-line" style="background:#3d8e8e"></div>Freundschaft</div>
+          <div class="rel-legend-item"><div class="rel-legend-line" style="background:#8b3a3a"></div>Feindschaft</div>
+          <div class="rel-legend-item"><div class="rel-legend-line" style="background:#6b4e8a"></div>Mentor</div>
+          <div class="rel-legend-item"><div class="rel-legend-line" style="background:#888"></div>Bekannt</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHARACTERS TAB -->
+    <div class="tab-content" id="tab-characters">
+      <div class="tab-scroll" style="padding:16px 40px 40px">
+        <div class="characters-grid" id="characters-grid"></div>
+      </div>
+    </div>
+
+    <!-- ORTE TAB -->
+    <div class="tab-content" id="tab-orte">
+      <div class="tab-scroll" style="padding:16px 40px 40px">
+        <div class="locations-grid" id="locations-grid"></div>
+      </div>
+    </div>
+
+    <!-- NOTES TAB -->
+    <div class="tab-content" id="tab-notes">
+      <div class="tab-scroll" style="padding:16px 40px 40px">
+        <div class="notes-area">
+          <textarea id="proj-notes-ta" placeholder="Notizen, Ideen, Weltenbau, Zeitlinien, Inspirationen …" oninput="saveNotes()"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS TAB -->
+    <div class="tab-content" id="tab-settings">
+      <div class="tab-scroll" style="padding:16px 40px 40px">
+
+        <!-- Google Drive Sync -->
+        <div class="settings-card">
+          <h4>☁ Google Drive Sync</h4>
+          <p style="font-family:var(--font-body);font-size:14px;color:var(--ink-muted);margin-bottom:16px;line-height:1.6">
+            Trage deine Google Apps Script URL ein um Projekte in Google Drive zu speichern und von anderen Geräten zu laden.
+          </p>
+          <div class="sf" style="margin-bottom:10px">
+            <label>Apps Script URL</label>
+            <input type="url" id="drive-script-url"
+              placeholder="https://script.google.com/macros/s/…/exec"
+              oninput="saveDriveSettings()"
+              style="font-size:13px">
+          </div>
+          <div class="sf" style="margin-bottom:14px">
+            <label>Passwort (optional)</label>
+            <input type="password" id="drive-password"
+              placeholder="Leer lassen wenn kein Passwort gesetzt"
+              oninput="saveDriveSettings()">
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="tb-btn primary" onclick="driveTest()">🔗 Verbindung testen</button>
+            <button class="tb-btn ghost" id="settings-drive-save" onclick="driveSave()" style="display:none">☁ Jetzt speichern</button>
+            <button class="tb-btn ghost" id="settings-drive-load" onclick="driveLoadModal()" style="display:none">☁ Aus Drive laden</button>
+          </div>
+          <div id="drive-status" style="margin-top:10px;font-size:13px;display:none"></div>
+        </div>
+
+        <!-- Buchcover & Buchrücken -->
+        <div class="settings-card">
+          <h4>📚 Buchcover & Buchrücken</h4>
+
+          <!-- Live Buchrücken-Vorschau -->
+          <div id="spine-preview-wrap" style="display:flex;gap:24px;align-items:flex-start;margin-bottom:24px;flex-wrap:wrap">
+            <!-- Spine -->
+            <div style="flex-shrink:0">
+              <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-muted);margin-bottom:8px">Buchrücken-Vorschau</div>
+              <div id="spine-preview" style="
+                width:40px;height:220px;
+                background:linear-gradient(135deg,#1a1410,#3d3530);
+                border-radius:2px 0 0 2px;
+                display:flex;align-items:center;justify-content:center;
+                box-shadow:3px 0 8px rgba(0,0,0,.3),-1px 0 2px rgba(0,0,0,.2);
+                position:relative;overflow:hidden;cursor:pointer;
+              " onclick="updateSpinePreview()">
+                <div id="spine-text-wrap" style="
+                  writing-mode:vertical-rl;transform:rotate(180deg);
+                  display:flex;flex-direction:column;align-items:center;gap:8px;
+                  padding:12px 0;width:100%;
+                ">
+                  <span id="spine-title-preview" style="font-family:'Playfair Display',Georgia,serif;font-size:11px;color:#c9a84c;font-weight:600;letter-spacing:.06em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-height:120px"></span>
+                  <span id="spine-author-preview" style="font-family:'DM Sans',sans-serif;font-size:9px;color:#b5aca6;letter-spacing:.04em;white-space:nowrap"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Cover mock -->
+            <div style="flex-shrink:0">
+              <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-muted);margin-bottom:8px">Cover-Vorschau</div>
+              <div id="cover-preview" style="
+                width:130px;height:180px;
+                background:linear-gradient(135deg,#1a1410 0%,#3d3530 60%,#2a2420 100%);
+                border-radius:0 3px 3px 0;
+                display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+                padding:14px 12px;
+                box-shadow:2px 3px 12px rgba(0,0,0,.35);
+                position:relative;overflow:hidden;
+              ">
+                <div id="cover-deco" style="position:absolute;top:20px;left:50%;transform:translateX(-50%);width:60px;height:2px;background:var(--gold);opacity:.6"></div>
+                <div id="cover-title-preview" style="font-family:'Playfair Display',Georgia,serif;font-size:13px;color:#f0ebe3;font-weight:600;text-align:center;line-height:1.3;margin-bottom:6px;word-break:break-word"></div>
+                <div id="cover-author-preview" style="font-family:'DM Sans',sans-serif;font-size:9px;color:#c9a84c;letter-spacing:.1em;text-transform:uppercase;text-align:center"></div>
+              </div>
+            </div>
+
+            <!-- Spine color picker -->
+            <div style="flex:1;min-width:200px">
+              <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-muted);margin-bottom:8px">Rücken-Farbe</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+                <div class="spine-color-swatch" data-color="linear-gradient(135deg,#1a1410,#3d3530)" style="background:linear-gradient(135deg,#1a1410,#3d3530)" onclick="setSpineColor(this)"></div>
+                <div class="spine-color-swatch" data-color="linear-gradient(135deg,#1a2a4a,#2a4a7a)" style="background:linear-gradient(135deg,#1a2a4a,#2a4a7a)" onclick="setSpineColor(this)"></div>
+                <div class="spine-color-swatch" data-color="linear-gradient(135deg,#2a1a10,#6a3a1a)" style="background:linear-gradient(135deg,#2a1a10,#6a3a1a)" onclick="setSpineColor(this)"></div>
+                <div class="spine-color-swatch" data-color="linear-gradient(135deg,#1a2a1a,#2a5a2a)" style="background:linear-gradient(135deg,#1a2a1a,#2a5a2a)" onclick="setSpineColor(this)"></div>
+                <div class="spine-color-swatch" data-color="linear-gradient(135deg,#2a1a2a,#5a2a5a)" style="background:linear-gradient(135deg,#2a1a2a,#5a2a5a)" onclick="setSpineColor(this)"></div>
+                <div class="spine-color-swatch" data-color="linear-gradient(135deg,#8a6e30,#c9a84c)" style="background:linear-gradient(135deg,#8a6e30,#c9a84c)" onclick="setSpineColor(this)"></div>
+                <div class="spine-color-swatch" data-color="linear-gradient(135deg,#5a1a1a,#8b3a3a)" style="background:linear-gradient(135deg,#5a1a1a,#8b3a3a)" onclick="setSpineColor(this)"></div>
+                <div class="spine-color-swatch" data-color="linear-gradient(135deg,#2a2a2a,#5a5a5a)" style="background:linear-gradient(135deg,#2a2a2a,#5a5a5a)" onclick="setSpineColor(this)"></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <div class="sf"><label>Autor / Autorin</label><input type="text" id="s-author" placeholder="Dein Name" oninput="updateSettings();updateSpinePreview()"></div>
+            <div class="sf"><label>Verlag (optional)</label><input type="text" id="s-publisher" placeholder="z.B. Eigenverlag" oninput="updateSettings()"></div>
+            <div class="sf" style="grid-column:1/-1"><label>Buchrücken-Text (Klappentext)</label>
+              <textarea id="s-backcover" rows="5" placeholder="Der Text für den Buchrücken — der Klappentext der den Leser neugierig macht …" oninput="updateSettings()"></textarea>
+            </div>
+            <div class="sf"><label>ISBN (optional)</label><input type="text" id="s-isbn" placeholder="z.B. 978-3-…" oninput="updateSettings()"></div>
+            <div class="sf"><label>Erscheinungsjahr</label><input type="text" id="s-year" placeholder="z.B. 2025" oninput="updateSettings()"></div>
+          </div>
+        </div>
+
+        <!-- Allgemeine Einstellungen -->
+        <div class="settings-card">
+          <h4>Projekt-Einstellungen</h4>
+          <div class="sf"><label>Titel</label><input type="text" id="s-title" oninput="updateSettings();updateSpinePreview()"></div>
+          <div class="sf"><label>Untertitel</label><input type="text" id="s-sub" oninput="updateSettings()"></div>
+          <div class="sf"><label>Genre</label>
+            <select id="s-genre" onchange="updateSettings()">
+              <option>Roman</option><option>Krimi</option><option>Thriller</option><option>Fantasy</option>
+              <option>Science-Fiction</option><option>Liebesroman</option><option>Historischer Roman</option>
+              <option>Sachbuch</option><option>Kurzgeschichten</option><option>Sonstiges</option>
+            </select>
+          </div>
+          <div class="sf"><label>Beschreibung / Exposé</label><textarea id="s-desc" rows="4" oninput="updateSettings()"></textarea></div>
+          <button class="tb-btn danger" onclick="deleteProject()">🗑 Projekt löschen</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- EDITOR VIEW -->
+  <div class="view" id="view-editor">
+    <div class="editor-toolbar">
+      <button class="fmt-btn bold" onclick="fmt('bold')">B</button>
+      <button class="fmt-btn italic" onclick="fmt('italic')">I</button>
+      <button class="fmt-btn" onclick="fmt('underline')"><u>U</u></button>
+      <div class="sep"></div>
+      <select class="fmt-select" id="sel-size" onchange="setFontSize(this.value)">
+        <option value="15">Klein</option><option value="17" selected>Normal</option>
+        <option value="19">Groß</option><option value="21">Sehr groß</option>
+      </select>
+      <select class="fmt-select" id="sel-font" onchange="setFont(this.value)">
+        <option value="'Crimson Pro',Georgia,serif">Crimson Pro</option>
+        <option value="Georgia,serif">Georgia</option>
+        <option value="'Palatino Linotype',Palatino,serif">Palatino</option>
+        <option value="'Times New Roman',Times,serif">Times New Roman</option>
+      </select>
+      <select class="fmt-select" id="sel-lh" onchange="setLineH(this.value)">
+        <option value="1.6">Eng</option><option value="1.9" selected>Normal</option>
+        <option value="2.2">Weit</option><option value="2.5">Sehr weit</option>
+      </select>
+      <div class="sep"></div>
+      <button class="fmt-btn" id="btn-indent" onclick="toggleIndent()" title="Erstzeileneinzug">⇥ Einzug</button>
+      <div class="sep"></div>
+      <select class="sp-lang-select" id="lt-lang" title="Prüfsprache">
+        <option value="de-DE">🇩🇪 Deutsch</option>
+        <option value="de-AT">🇦🇹 Österr.</option>
+        <option value="de-CH">🇨🇭 Schweiz</option>
+        <option value="en-US">🇺🇸 English</option>
+        <option value="en-GB">🇬🇧 English UK</option>
+        <option value="fr">🇫🇷 Français</option>
+        <option value="es">🇪🇸 Español</option>
+      </select>
+      <button class="fmt-btn" id="btn-spellcheck" onclick="runSpellcheck()" title="Rechtschreibprüfung starten" style="gap:5px;padding:0 10px">
+        <span id="sp-btn-icon">✓</span> Prüfen
+      </button>
+      <div class="sep"></div>
+      <span class="wc-display" id="wc1">0 Wörter</span>
+    </div>
+    <div class="editor-chapter-bar">
+      <input type="number" class="ch-num-inp" id="e-ch-num" placeholder="1" min="1" oninput="saveMeta()">
+      <input type="text" class="ch-name-inp" id="e-ch-name" placeholder="Kapitelname …" oninput="saveMeta()">
+      <input type="text" class="sc-name-inp" id="e-sc-name" placeholder="Szenenname …" oninput="saveMeta()">
+      <span class="wc-display" id="wc2">0 Wörter</span>
+    </div>
+    <div class="editor-scroll">
+      <div class="editor-page" id="editor-page">
+        <div class="editor-page-inner">
+          <div id="editor-content" contenteditable="true"
+            spellcheck="true"
+            data-placeholder="Schreibe hier …"
+            oninput="onInput()"
+            onkeydown="onKey(event)"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHARACTER DETAIL VIEW -->
+  <div class="view" id="view-character">
+    <div class="view-scroll">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px">
+        <button class="tb-btn ghost" onclick="backToProject()">← Zurück</button>
+        <h3 style="font-family:var(--font-display);font-size:20px">Figur bearbeiten</h3>
+        <button class="tb-btn danger" style="margin-left:auto" onclick="deleteChar()">🗑 Löschen</button>
+      </div>
+      <div class="char-detail-top">
+        <div class="char-detail-avatar" id="cd-avatar">A</div>
+        <div style="flex:1">
+          <input class="char-name-input" type="text" id="cd-name" placeholder="Name" oninput="saveChar();updateAvatar()">
+          <div style="font-size:12px;color:var(--ink-muted);margin-top:4px">Figuren-Steckbrief</div>
+        </div>
+      </div>
+
+      <div class="char-section-title">Identität</div>
+      <div class="char-form-grid">
+        <div class="ff"><label>Rolle</label>
+          <select id="cd-role" onchange="saveChar()">
+            <option>Protagonist</option><option>Antagonist</option><option>Nebenfigur</option>
+            <option>Mentor</option><option>Liebesinteresse</option><option>Sonstiges</option>
+          </select>
+        </div>
+        <div class="ff"><label>Alter</label><input type="text" id="cd-age" placeholder="z.B. 32" oninput="saveChar()"></div>
+        <div class="ff"><label>Geschlecht</label>
+          <select id="cd-gender" onchange="saveChar()">
+            <option value="">—</option><option>Männlich</option><option>Weiblich</option><option>Divers</option><option>Keine Angabe</option>
+          </select>
+        </div>
+        <div class="ff"><label>Beruf</label><input type="text" id="cd-job" placeholder="z.B. Detektiv" oninput="saveChar()"></div>
+        <div class="ff"><label>Herkunft / Nationalität</label><input type="text" id="cd-origin" placeholder="z.B. Berlin, Deutschland" oninput="saveChar()"></div>
+        <div class="ff"><label>Geburtsort</label><input type="text" id="cd-birthplace" placeholder="z.B. Hamburg" oninput="saveChar()"></div>
+      </div>
+
+      <div class="char-section-title">Äußerliches</div>
+      <div class="char-form-grid">
+        <div class="ff"><label>Haarfarbe</label><input type="text" id="cd-hair" placeholder="z.B. Dunkelbraun, lockig" oninput="saveChar()"></div>
+        <div class="ff"><label>Augenfarbe</label><input type="text" id="cd-eyes" placeholder="z.B. Graugrün" oninput="saveChar()"></div>
+        <div class="ff"><label>Größe</label><input type="text" id="cd-height" placeholder="z.B. 178 cm" oninput="saveChar()"></div>
+        <div class="ff"><label>Körperbau</label><input type="text" id="cd-build" placeholder="z.B. Schlank, sportlich" oninput="saveChar()"></div>
+        <div class="ff"><label>Besondere Merkmale</label><input type="text" id="cd-marks" placeholder="z.B. Narbe an der linken Wange" oninput="saveChar()"></div>
+        <div class="ff"><label>Typische Kleidung</label><input type="text" id="cd-clothing" placeholder="z.B. Immer in Schwarz" oninput="saveChar()"></div>
+      </div>
+
+      <div class="char-section-title">Persönlichkeit & Hintergrund</div>
+      <div class="char-form-grid">
+        <div class="ff full"><label>Kurzbeschreibung</label><textarea id="cd-desc" rows="2" placeholder="Wer ist diese Figur?" oninput="saveChar()"></textarea></div>
+        <div class="ff full"><label>Charakter / Persönlichkeit</label><textarea id="cd-personality" rows="3" placeholder="Charakterzüge, Stärken, Schwächen, Eigenheiten …" oninput="saveChar()"></textarea></div>
+        <div class="ff full"><label>Hintergrundgeschichte</label><textarea id="cd-bg" rows="3" placeholder="Vergangenheit, prägende Erlebnisse, Traumata …" oninput="saveChar()"></textarea></div>
+        <div class="ff"><label>Motivation / Inneres Ziel</label><textarea id="cd-motivation" rows="3" placeholder="Was will diese Figur wirklich?" oninput="saveChar()"></textarea></div>
+        <div class="ff"><label>Äußeres Ziel / Aufgabe</label><textarea id="cd-goal" rows="3" placeholder="Was muss diese Figur tun?" oninput="saveChar()"></textarea></div>
+        <div class="ff"><label>Größte Angst</label><textarea id="cd-fear" rows="2" placeholder="Was fürchtet sie am meisten?" oninput="saveChar()"></textarea></div>
+        <div class="ff"><label>Sprachstil / Redeweise</label><textarea id="cd-speech" rows="2" placeholder="z.B. Knapp, trocken, sarkastisch …" oninput="saveChar()"></textarea></div>
+        <div class="ff full"><label>Typisches Zitat</label><textarea id="cd-quote" rows="2" placeholder="Ein charakteristischer Satz oder eine Aussage …" oninput="saveChar()"></textarea></div>
+        <div class="ff full"><label>Beziehungen zu anderen Figuren</label><textarea id="cd-relations" rows="3" placeholder="Verbindungen, Konflikte, Abhängigkeiten …" oninput="saveChar()"></textarea></div>
+        <div class="ff full"><label>Notizen</label><textarea id="cd-notes" rows="3" placeholder="Weitere Ideen und Notizen …" oninput="saveChar()"></textarea></div>
+      </div>
+      <div style="height:40px"></div>
+    </div>
+  </div>
+
+  <!-- LOCATION DETAIL VIEW -->
+  <div class="view" id="view-location">
+    <div class="view-scroll">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:24px">
+        <button class="tb-btn ghost" onclick="backToProject()">← Zurück</button>
+        <h3 style="font-family:var(--font-display);font-size:20px">Ort bearbeiten</h3>
+        <button class="tb-btn danger" style="margin-left:auto" onclick="deleteLoc()">🗑 Löschen</button>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:20px;margin-bottom:28px">
+        <div style="font-size:48px" id="loc-icon-display">📍</div>
+        <div style="flex:1">
+          <input type="text" id="ld-name" placeholder="Name des Ortes" oninput="saveLoc()"
+            style="font-family:var(--font-display);font-size:24px;color:var(--ink);border:none;border-bottom:2px solid transparent;background:transparent;width:100%;padding-bottom:4px;transition:border-color .15s"
+            onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='transparent'">
+          <div style="font-size:12px;color:var(--ink-muted);margin-top:4px">Orts-Beschreibung</div>
+        </div>
+      </div>
+
+      <div class="char-section-title">Details</div>
+      <div class="loc-form-grid" style="gap:14px">
+        <div class="ff"><label>Typ</label>
+          <select id="ld-type" onchange="saveLoc();updateLocIcon()">
+            <option value="Stadt">🏙 Stadt</option>
+            <option value="Dorf">🏘 Dorf</option>
+            <option value="Gebäude">🏛 Gebäude</option>
+            <option value="Natur">🌲 Natur / Landschaft</option>
+            <option value="Innenraum">🪑 Innenraum</option>
+            <option value="Straße">🛣 Straße / Weg</option>
+            <option value="Wasser">🌊 Gewässer</option>
+            <option value="Unterirdisch">⛏ Unterirdisch</option>
+            <option value="Fantastisch">✨ Fantastisch / Erfunden</option>
+            <option value="Sonstiges">📍 Sonstiges</option>
+          </select>
+        </div>
+        <div class="ff"><label>Land / Region</label><input type="text" id="ld-region" placeholder="z.B. Bayern, Deutschland" oninput="saveLoc()"></div>
+        <div class="ff"><label>Zeitepoche</label><input type="text" id="ld-era" placeholder="z.B. Mittelalter, 1920er" oninput="saveLoc()"></div>
+        <div class="ff"><label>Klima / Wetter</label><input type="text" id="ld-climate" placeholder="z.B. Kalt, neblig" oninput="saveLoc()"></div>
+      </div>
+
+      <div class="char-section-title">Beschreibungen</div>
+      <div class="loc-form-grid" style="gap:14px">
+        <div class="ff full"><label>Kurzbeschreibung</label><textarea id="ld-desc" rows="2" placeholder="Einzeiler zum Ort …" oninput="saveLoc()"></textarea></div>
+        <div class="ff full"><label>Ausführliche Beschreibung</label><textarea id="ld-long" rows="4" placeholder="Detaillierte Beschreibung: Aussehen, Größe, Architektur, Natur …" oninput="saveLoc()"></textarea></div>
+        <div class="ff"><label>Atmosphäre / Stimmung</label><textarea id="ld-mood" rows="3" placeholder="Wie fühlt sich dieser Ort an? Welche Stimmung erzeugt er?" oninput="saveLoc()"></textarea></div>
+        <div class="ff"><label>Gerüche / Geräusche / Sinne</label><textarea id="ld-senses" rows="3" placeholder="Was riecht, hört und fühlt man hier?" oninput="saveLoc()"></textarea></div>
+        <div class="ff"><label>Geschichte des Ortes</label><textarea id="ld-history" rows="3" placeholder="Was ist hier passiert? Wer lebte hier?" oninput="saveLoc()"></textarea></div>
+        <div class="ff"><label>Bedeutung für die Geschichte</label><textarea id="ld-relevance" rows="3" placeholder="Welche Rolle spielt dieser Ort in der Handlung?" oninput="saveLoc()"></textarea></div>
+        <div class="ff full"><label>Notizen</label><textarea id="ld-notes" rows="3" placeholder="Weitere Ideen …" oninput="saveLoc()"></textarea></div>
+      </div>
+      <div style="height:40px"></div>
+    </div>
+  </div>
+
+</div><!-- /content -->
+</div><!-- /main-body -->
+</div><!-- /app -->
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modal-project">
+  <div class="modal">
+    <h3>Neues Projekt</h3>
+    <div class="mf"><label>Titel *</label><input type="text" id="mp-title" placeholder="Romantitel …"></div>
+    <div class="mf"><label>Untertitel</label><input type="text" id="mp-sub" placeholder="Untertitel …"></div>
+    <div class="mf"><label>Genre</label>
+      <select id="mp-genre">
+        <option>Roman</option><option>Krimi</option><option>Thriller</option><option>Fantasy</option>
+        <option>Science-Fiction</option><option>Liebesroman</option><option>Historischer Roman</option>
+        <option>Sachbuch</option><option>Kurzgeschichten</option><option>Sonstiges</option>
+      </select>
+    </div>
+    <div class="mf"><label>Beschreibung</label><textarea id="mp-desc" rows="3" placeholder="Worum geht es?"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('modal-project')">Abbrechen</button>
+      <button class="btn-ok" onclick="saveProjectModal()">Erstellen</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-chapter">
+  <div class="modal">
+    <h3 id="mch-title">Neues Kapitel</h3>
+    <div class="mf"><label>Nummer</label><input type="number" id="mch-num" min="1" value="1"></div>
+    <div class="mf"><label>Kapitelname *</label><input type="text" id="mch-name" placeholder="Name des Kapitels …"></div>
+    <div class="mf"><label>Notiz</label><textarea id="mch-note" rows="2" placeholder="Kurze Beschreibung …"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('modal-chapter')">Abbrechen</button>
+      <button class="btn-ok" id="mch-ok" onclick="saveChapterModal()">Erstellen</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-scene">
+  <div class="modal">
+    <h3>Neue Szene</h3>
+    <div class="mf"><label>Szenenname *</label><input type="text" id="ms-name" placeholder="Name der Szene …"></div>
+    <div class="mf"><label>Notiz</label><textarea id="ms-note" rows="2" placeholder="Was passiert?"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('modal-scene')">Abbrechen</button>
+      <button class="btn-ok" onclick="saveSceneModal()">Erstellen</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-char">
+  <div class="modal">
+    <h3>Neue Figur</h3>
+    <div class="mf"><label>Name *</label><input type="text" id="mc-name" placeholder="Name …"></div>
+    <div class="mf"><label>Rolle</label>
+      <select id="mc-role">
+        <option>Protagonist</option><option>Antagonist</option><option>Nebenfigur</option>
+        <option>Mentor</option><option>Liebesinteresse</option><option>Sonstiges</option>
+      </select>
+    </div>
+    <div class="mf"><label>Kurzbeschreibung</label><textarea id="mc-desc" rows="2" placeholder="Wer ist das?"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('modal-char')">Abbrechen</button>
+      <button class="btn-ok" onclick="saveCharModal()">Erstellen</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-ort">
+  <div class="modal">
+    <h3>Neuer Ort</h3>
+    <div class="mf"><label>Name *</label><input type="text" id="mo-name" placeholder="Name des Ortes …"></div>
+    <div class="mf"><label>Typ</label>
+      <select id="mo-type">
+        <option value="Stadt">🏙 Stadt</option><option value="Dorf">🏘 Dorf</option>
+        <option value="Gebäude">🏛 Gebäude</option><option value="Natur">🌲 Natur</option>
+        <option value="Innenraum">🪑 Innenraum</option><option value="Straße">🛣 Straße</option>
+        <option value="Wasser">🌊 Gewässer</option><option value="Fantastisch">✨ Fantastisch</option>
+        <option value="Sonstiges">📍 Sonstiges</option>
+      </select>
+    </div>
+    <div class="mf"><label>Kurzbeschreibung</label><textarea id="mo-desc" rows="2" placeholder="Wo liegt das? Wie sieht es aus?"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('modal-ort')">Abbrechen</button>
+      <button class="btn-ok" onclick="saveOrtModal()">Erstellen</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-rel">
+  <div class="modal">
+    <h3>Verbindung hinzufügen</h3>
+    <div class="mf"><label>Figur A</label>
+      <select id="mr-a" onchange="checkRelDupe()"></select>
+    </div>
+    <div class="mf"><label>Figur B</label>
+      <select id="mr-b" onchange="checkRelDupe()"></select>
+    </div>
+    <div class="mf"><label>Beziehungstyp</label>
+      <div class="rel-type-grid" id="rel-type-grid">
+        <div class="rel-type-btn selected" data-type="Bekannt" onclick="selectRelType(this)">👋 Bekannt</div>
+        <div class="rel-type-btn" data-type="Freundschaft" onclick="selectRelType(this)">🤝 Freundschaft</div>
+        <div class="rel-type-btn" data-type="Familie" onclick="selectRelType(this)">👨‍👩‍👧 Familie</div>
+        <div class="rel-type-btn" data-type="Liebe" onclick="selectRelType(this)">❤ Liebe</div>
+        <div class="rel-type-btn" data-type="Feindschaft" onclick="selectRelType(this)">⚔ Feindschaft</div>
+        <div class="rel-type-btn" data-type="Mentor" onclick="selectRelType(this)">🎓 Mentor</div>
+      </div>
+    </div>
+    <div class="mf"><label>Beschreibung (optional)</label><input type="text" id="mr-desc" placeholder="z.B. Seit der Kindheit befreundet"></div>
+    <div id="mr-dupe-warn" style="color:var(--red-soft);font-size:12px;display:none">Diese Verbindung existiert bereits.</div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('modal-rel')">Abbrechen</button>
+      <button class="btn-ok" onclick="saveRelModal()">Hinzufügen</button>
+    </div>
+  </div>
+</div>
+
+<div id="spellcheck-panel">
+  <div class="sp-header">
+    <h4>Rechtschreibprüfung</h4>
+    <button class="sp-close" onclick="closeSpellcheck()">✕</button>
+  </div>
+  <div class="sp-status" id="sp-status" style="display:none">
+    <div class="sp-spinner" id="sp-spinner"></div>
+    <span id="sp-status-text">Prüfe …</span>
+  </div>
+  <div class="sp-errors-list" id="sp-errors-list">
+    <div class="sp-empty"><div class="sp-ok-icon">✓</div><div>Klicke „Prüfen" um den Text zu analysieren.</div></div>
+  </div>
+  <div class="sp-summary" id="sp-summary" style="display:none">
+    <div class="sp-count"><div class="sp-dot" style="background:#e05050"></div><span id="sp-cnt-spell">0</span> Rechtschr.</div>
+    <div class="sp-count"><div class="sp-dot" style="background:#2d6e6e"></div><span id="sp-cnt-gram">0</span> Grammatik</div>
+    <div class="sp-count"><div class="sp-dot" style="background:#c9a84c"></div><span id="sp-cnt-style">0</span> Stil</div>
+    <button class="sp-ignore-btn" onclick="clearSpellHighlights()" style="margin-left:auto">Alle entfernen</button>
+  </div>
+</div>
+
+<!-- Drive Load Modal -->
+<div class="modal-overlay" id="modal-drive-load">
+  <div class="modal" style="max-width:520px">
+    <h3>☁ Aus Google Drive laden</h3>
+    <div id="drive-load-status" style="font-size:13px;color:var(--ink-muted);margin-bottom:12px">Lade Projektliste …</div>
+    <div id="drive-projects-list" style="display:flex;flex-direction:column;gap:8px;max-height:340px;overflow-y:auto;margin-bottom:16px"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal('modal-drive-load')">Schließen</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<input type="file" id="import-input" accept=".json" style="display:none" onchange="handleImport(event)">
+
+<script>
+// ==============================================
+// STATE
+// ==============================================
+let S = {
+  projects: [],
+  curProject: null,
+  curChapter: null,
+  curScene: null,
+  curChar: null,
+  curLoc: null,
+  editorCfg: { size:'17', font:"'Crimson Pro',Georgia,serif", lh:'1.9' },
+  indentMode: false
+};
+let pendingChId = null;
+let autoSaveT = null;
+let relNodes = {}; // {charId: {x,y,vx,vy}}
+let relEditing = null; // for edit mode
+let relFirstClick = null;
+let animFrame = null;
+let isDragging = false;
+let dragNode = null;
+let dragOffX = 0, dragOffY = 0;
+
+function save() { try { localStorage.setItem('ss_v2', JSON.stringify(S)); } catch(e){} }
+function load() { try { const r = localStorage.getItem('ss_v2'); if(r) { const d=JSON.parse(r); S={...S,...d}; } } catch(e){} }
+
+function uid() { return Date.now().toString(36)+Math.random().toString(36).slice(2); }
+function esc(s){ if(!s) return ''; return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function toast(msg,t=''){const el=document.getElementById('toast');el.textContent=msg;el.className='show '+t;clearTimeout(el._t);el._t=setTimeout(()=>{el.className=''},3000);}
+
+function curProj() { return S.projects.find(p=>p.id===S.curProject)||null; }
+function curCh() { const p=curProj(); return p?(p.chapters||[]).find(c=>c.id===S.curChapter)||null:null; }
+function curSc() { const c=curCh(); return c?(c.scenes||[]).find(s=>s.id===S.curScene)||null:null; }
+
+function wc(text) { return text&&text.trim() ? text.trim().split(/\s+/).length : 0; }
+function sceneWC(sc) { if(!sc||!sc.content) return 0; const d=document.createElement('div'); d.innerHTML=sc.content; return wc(d.textContent); }
+function projWC(p) { let t=0; (p.chapters||[]).forEach(c=>(c.scenes||[]).forEach(s=>t+=sceneWC(s))); return t; }
+
+// ==============================================
+// VIEWS
+// ==============================================
+function showView(id) {
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  const el=document.getElementById('view-'+id);
+  if(el) el.classList.add('active');
+  if(id==='beziehungen'||id==='project') {} // handled by tab
+}
+
+function breadcrumb(parts) {
+  const bc=document.getElementById('breadcrumb');
+  bc.innerHTML = parts.map((p,i)=>
+    i<parts.length-1
+      ? `<span style="cursor:pointer" onclick="${p.fn}">${esc(p.label)}</span><span class="sep">›</span>`
+      : `<span class="active">${esc(p.label)}</span>`
+  ).join('');
+}
+
+function showDashboard() {
+  S.curProject=null; save();
+  showView('dashboard');
+  renderDashboard();
+  breadcrumb([{label:'Projekte',fn:''}]);
+  document.getElementById('btn-export').style.display='none';
+  document.getElementById('btn-new').textContent='+ Neues Projekt';
+  document.getElementById('btn-new').onclick=()=>openModal('modal-project');
+  // Hide project-specific mobile nav items
+  ['smn-proj-section','smn-proj-items','smn-proj-actions','smn-action-items'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.style.display='none';
+  });
+  closeMobile();
+  renderSidebar();
+}
+
+function showProject(id) {
+  if(id) S.curProject=id;
+  const p=curProj(); if(!p) return;
+  save();
+  showView('project');
+  document.getElementById('proj-title').textContent=p.title;
+  document.getElementById('proj-meta').textContent=(p.genre||'Roman')+(p.subtitle?' — '+p.subtitle:'');
+  document.getElementById('s-title').value=p.title||'';
+  document.getElementById('s-sub').value=p.subtitle||'';
+  document.getElementById('s-genre').value=p.genre||'Roman';
+  document.getElementById('s-desc').value=p.description||'';
+  // New fields
+  const sa=document.getElementById('s-author'); if(sa) sa.value=p.author||'';
+  const sp=document.getElementById('s-publisher'); if(sp) sp.value=p.publisher||'';
+  const sb=document.getElementById('s-backcover'); if(sb) sb.value=p.backcover||'';
+  const si=document.getElementById('s-isbn'); if(si) si.value=p.isbn||'';
+  const sy=document.getElementById('s-year'); if(sy) sy.value=p.year||'';
+  document.getElementById('proj-notes-ta').value=p.notes||'';
+  breadcrumb([{label:'Projekte',fn:'showDashboard()'},{label:p.title,fn:''}]);
+  document.getElementById('btn-export').style.display='';
+  document.getElementById('sb-add-char').style.display='';
+  document.getElementById('sb-add-ort').style.display='';
+  updateDriveButtons();
+  // Show project nav items in mobile menu
+  const projSection = document.getElementById('smn-proj-section');
+  const projItems = document.getElementById('smn-proj-items');
+  const projActions = document.getElementById('smn-proj-actions');
+  const actionItems = document.getElementById('smn-action-items');
+  if(projSection) projSection.style.display='';
+  if(projItems) projItems.style.display='';
+  if(projActions) projActions.style.display='';
+  if(actionItems) actionItems.style.display='';
+  renderSidebar();
+  renderStoryboard();
+  renderCharsGrid();
+  renderLocsGrid();
+  projTab('storyboard', document.querySelector('.project-tab'));
+  closeMobile();
+}
+
+function backToProject() { showProject(); }
+
+// ==============================================
+// TABS
+// ==============================================
+function projTab(tab, btn) {
+  // Save buch content before switching away
+  if (buchCurChId) buchSaveContent();
+  document.querySelectorAll('.project-tab').forEach(t=>t.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  const el=document.getElementById('tab-'+tab);
+  if(el) el.classList.add('active');
+  if(tab==='timeline') renderTimeline();
+  if(tab==='beziehungen') { initRelGraph(); }
+  if(tab==='characters') renderCharsGrid();
+  if(tab==='orte') renderLocsGrid();
+  if(tab==='buch') buchInit();
+  if(tab==='settings') {
+    loadDriveSettings();
+    // Load spine color from project
+    const p=curProj();
+    if(p && p.spineColor) {
+      currentSpineColor=p.spineColor;
+      document.querySelectorAll('.spine-color-swatch').forEach(s=>{
+        if(s.dataset.color===p.spineColor) s.classList.add('selected');
+      });
+    }
+    updateSpinePreview();
+  }
+}
+
+function sbTab(tab, btn) {
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.sidebar-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('sp-'+tab).classList.add('active');
+}
+
+// ==============================================
+// DASHBOARD
+// ==============================================
+function renderDashboard() {
+  const grid=document.getElementById('projects-grid');
+  let h='';
+  S.projects.forEach(p=>{
+    const w=projWC(p), ch=(p.chapters||[]).length, chars=(p.characters||[]).length, locs=(p.locations||[]).length;
+    const d=p.updatedAt?new Date(p.updatedAt).toLocaleDateString('de-DE'):'—';
+    h+=`<div class="project-card" onclick="showProject('${p.id}')">
+      <div class="project-card-actions">
+        <button class="card-act-btn del" onclick="event.stopPropagation();delProject('${p.id}')">🗑</button>
+      </div>
+      <div class="genre-badge">${esc(p.genre||'Roman')}</div>
+      <h3>${esc(p.title)}</h3>
+      ${p.subtitle?`<div class="subtitle">${esc(p.subtitle)}</div>`:''}
+      <div class="project-stats">
+        <div class="stat"><span class="val">${w.toLocaleString('de')}</span><span class="lbl">Wörter</span></div>
+        <div class="stat"><span class="val">${ch}</span><span class="lbl">Kapitel</span></div>
+        <div class="stat"><span class="val">${chars}</span><span class="lbl">Figuren</span></div>
+        <div class="stat"><span class="val">${locs}</span><span class="lbl">Orte</span></div>
+      </div>
+      <div class="project-card-date">Zuletzt: ${d}</div>
+    </div>`;
+  });
+  h+=`<div class="new-project-card" onclick="openModal('modal-project')"><div class="plus">+</div><span>Neues Projekt</span></div>`;
+  grid.innerHTML=h;
+}
+
+// ==============================================
+// STORYBOARD
+// ==============================================
+function renderStoryboard() {
+  const p=curProj(); if(!p) return;
+  const grid=document.getElementById('storyboard-grid');
+  if(!(p.chapters||[]).length){
+    grid.innerHTML=`<div class="empty-state"><div class="icon">📖</div><h4>Noch keine Kapitel</h4><p>Lege das erste Kapitel an.</p></div>`;
+    return;
+  }
+  let h='';
+  p.chapters.forEach((ch,ci)=>{
+    const sc=(ch.scenes||[]).length;
+    h+=`<div class="chapter-block">
+      <div class="chapter-header" onclick="toggleCh('${ch.id}')">
+        <div class="chapter-num-badge">${ch.num||ci+1}</div>
+        <div class="chapter-title-area"><h4>${esc(ch.title)}</h4><div class="sc-count">${sc} Szene${sc!==1?'n':''}</div></div>
+        <div class="ch-actions" onclick="event.stopPropagation()">
+          <button class="ch-btn write" onclick="openFirstScene('${ch.id}')">✍ Schreiben</button>
+          <button class="ch-btn edit" onclick="editChapter('${ch.id}')">Bearbeiten</button>
+          <button class="ch-btn del" onclick="delChapter('${ch.id}')">✕</button>
+        </div>
+        <div class="chapter-toggle" id="chev-${ch.id}">▼</div>
+      </div>
+      <div id="chscenes-${ch.id}" style="display:none">
+        <div class="scenes-list">`;
+    (ch.scenes||[]).forEach((s,si)=>{
+      const sw=sceneWC(s);
+      h+=`<div class="scene-block" onclick="openEditor('${ch.id}','${s.id}')">
+        <div class="scene-num">${si+1}</div>
+        <div class="scene-block-info">
+          <div class="scene-title">${esc(s.title||'Szene')}</div>
+          ${s.note?`<div class="scene-note">${esc(s.note)}</div>`:''}
+          <div class="scene-words">${sw} Wörter</div>
+        </div>
+        <div class="scene-block-actions">
+          <button class="sc-btn write" onclick="event.stopPropagation();openEditor('${ch.id}','${s.id}')">✍</button>
+          <button class="sc-btn del" onclick="event.stopPropagation();delScene('${ch.id}','${s.id}')">✕</button>
+        </div>
+      </div>`;
+    });
+    h+=`<button class="add-scene-btn" onclick="openAddSceneModal('${ch.id}')">+ Szene hinzufügen</button>
+        </div>
+      </div>
+    </div>`;
+  });
+  grid.innerHTML=h;
+}
+
+function toggleCh(id) {
+  const el=document.getElementById('chscenes-'+id);
+  const ev=document.getElementById('chev-'+id);
+  const hdr=el.previousElementSibling;
+  const open=el.style.display==='none';
+  el.style.display=open?'block':'none';
+  ev.classList.toggle('open',open);
+  hdr.classList.toggle('open',open);
+}
+
+// ==============================================
+// TIMELINE
+// ==============================================
+const CH_COLORS=['#c9a84c','#2d6e6e','#8b3a3a','#6b4e8a','#3a6b3a','#5a7a9a','#9a5a3a','#5a9a9a'];
+
+function renderTimeline() {
+  const p=curProj(); if(!p) return;
+  const track=document.getElementById('tl-track');
+  const legend=document.getElementById('tl-legend');
+  if(!(p.chapters||[]).length){
+    track.innerHTML=`<div class="empty-state"><div class="icon">🕐</div><h4>Noch keine Kapitel</h4><p>Erstelle erst Kapitel und Szenen.</p></div>`;
+    legend.innerHTML=''; return;
+  }
+  let legH='';
+  let h=`<div class="timeline-chapters-row">`;
+  p.chapters.forEach((ch,ci)=>{
+    const col=CH_COLORS[ci%CH_COLORS.length];
+    legH+=`<div class="legend-item"><div class="legend-dot" style="background:${col}"></div>${esc(ch.title)}</div>`;
+    h+=`<div class="timeline-chapter-col">
+      <div class="tl-ch-label" style="color:${col}">${ch.num?'Kap. '+ch.num+': ':''}${esc(ch.title)}</div>
+      <div class="tl-scenes">`;
+    (ch.scenes||[]).forEach(s=>{
+      const sw=sceneWC(s);
+      const chars=(s.characters||[]).join(', ');
+      h+=`<div class="tl-scene-card" style="border-left-color:${col}" onclick="openEditor('${ch.id}','${s.id}')">
+        <div class="tl-sc-title">${esc(s.title||'Szene')}</div>
+        ${chars?`<div class="tl-sc-chars">👤 ${esc(chars)}</div>`:''}
+        <div class="tl-sc-words">${sw} Wörter</div>
+      </div>`;
+    });
+    h+=`<button class="tl-add-event" onclick="openAddSceneModal('${ch.id}')">+ Szene</button>
+      </div>
+    </div>`;
+  });
+  h+=`</div>`;
+  track.innerHTML=h;
+  legend.innerHTML=legH;
+}
+
+// ==============================================
+// RELATIONSHIP GRAPH
+// ==============================================
+const REL_COLORS={
+  'Bekannt':'#888888','Freundschaft':'#3d8e8e','Familie':'#c9a84c',
+  'Liebe':'#e84393','Feindschaft':'#8b3a3a','Mentor':'#6b4e8a'
+};
+const REL_WIDTH={'Bekannt':1,'Freundschaft':2,'Familie':2,'Liebe':2,'Feindschaft':2,'Mentor':2};
+
+function initRelGraph() {
+  const p=curProj(); if(!p) return;
+  const canvas=document.getElementById('rel-canvas');
+  const wrap=document.getElementById('rel-canvas-wrap');
+  canvas.width=wrap.clientWidth;
+  canvas.height=wrap.clientHeight;
+
+  const chars=p.characters||[];
+  if(!chars.length){ drawEmptyGraph(); return; }
+
+  // init node positions if not set
+  chars.forEach((c,i)=>{
+    if(!relNodes[c.id]){
+      const angle=(i/chars.length)*Math.PI*2;
+      const r=Math.min(canvas.width,canvas.height)*0.32;
+      relNodes[c.id]={
+        x:canvas.width/2+Math.cos(angle)*r,
+        y:canvas.height/2+Math.sin(angle)*r,
+        vx:0,vy:0
+      };
+    }
+  });
+  // remove stale nodes
+  const ids=new Set(chars.map(c=>c.id));
+  Object.keys(relNodes).forEach(k=>{ if(!ids.has(k)) delete relNodes[k]; });
+
+  cancelAnimationFrame(animFrame);
+  drawGraph();
+  setupCanvasEvents(canvas, p);
+}
+
+function resetRelLayout() {
+  relNodes={};
+  const p=curProj(); if(!p) return;
+  (p.characters||[]).forEach((c,i)=>{
+    const canvas=document.getElementById('rel-canvas');
+    const angle=(i/(p.characters.length||1))*Math.PI*2;
+    const r=Math.min(canvas.width,canvas.height)*0.32;
+    relNodes[c.id]={x:canvas.width/2+Math.cos(angle)*r,y:canvas.height/2+Math.sin(angle)*r,vx:0,vy:0};
+  });
+  drawGraph();
+}
+
+function drawEmptyGraph() {
+  const canvas=document.getElementById('rel-canvas');
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle='#b5aca6';
+  ctx.font='14px DM Sans, sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText('Noch keine Figuren. Füge erst Charaktere hinzu.',canvas.width/2,canvas.height/2);
+}
+
+function drawGraph() {
+  const canvas=document.getElementById('rel-canvas');
+  const ctx=canvas.getContext('2d');
+  const p=curProj(); if(!p) return;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  const chars=p.characters||[];
+  const rels=p.relationships||[];
+
+  // Draw edges
+  rels.forEach(r=>{
+    const a=relNodes[r.a], b=relNodes[r.b];
+    if(!a||!b) return;
+    const col=REL_COLORS[r.type]||'#888';
+    const lw=REL_WIDTH[r.type]||1;
+    ctx.beginPath();
+    ctx.moveTo(a.x,a.y);
+    ctx.lineTo(b.x,b.y);
+    ctx.strokeStyle=col;
+    ctx.lineWidth=lw;
+    ctx.setLineDash(r.type==='Bekannt'?[4,4]:[]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Label
+    if(r.description||r.type){
+      const mx=(a.x+b.x)/2, my=(a.y+b.y)/2;
+      ctx.save();
+      ctx.fillStyle='rgba(247,243,238,0.9)';
+      const label=r.description||r.type;
+      ctx.font='11px DM Sans, sans-serif';
+      const tw=ctx.measureText(label).width;
+      ctx.fillRect(mx-tw/2-4,my-9,tw+8,16);
+      ctx.fillStyle=col;
+      ctx.textAlign='center';
+      ctx.fillText(label,mx,my+3);
+      ctx.restore();
+    }
+  });
+
+  // Draw nodes
+  chars.forEach(c=>{
+    const n=relNodes[c.id]; if(!n) return;
+    const r=26;
+    // Shadow
+    ctx.shadowColor='rgba(26,20,16,0.15)';
+    ctx.shadowBlur=8;
+    // Circle
+    const grad=ctx.createRadialGradient(n.x-4,n.y-4,2,n.x,n.y,r);
+    const roleColor=c.role==='Antagonist'?'#8b3a3a':c.role==='Protagonist'?'#2d6e6e':'#c9a84c';
+    grad.addColorStop(0,'#f7f3ee');
+    grad.addColorStop(1,roleColor+'44');
+    ctx.beginPath();
+    ctx.arc(n.x,n.y,r,0,Math.PI*2);
+    ctx.fillStyle=grad;
+    ctx.fill();
+    ctx.shadowBlur=0;
+    ctx.strokeStyle=roleColor;
+    ctx.lineWidth=2.5;
+    ctx.stroke();
+
+    // Highlight if selected
+    if(relFirstClick===c.id){
+      ctx.beginPath();
+      ctx.arc(n.x,n.y,r+4,0,Math.PI*2);
+      ctx.strokeStyle='#c9a84c';
+      ctx.lineWidth=2;
+      ctx.setLineDash([4,3]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Initial
+    ctx.fillStyle=roleColor;
+    ctx.font='bold 16px Playfair Display, Georgia, serif';
+    ctx.textAlign='center';
+    ctx.textBaseline='middle';
+    ctx.fillText((c.name||'?')[0].toUpperCase(),n.x,n.y);
+
+    // Name
+    ctx.fillStyle='#3d3530';
+    ctx.font='12px DM Sans, sans-serif';
+    ctx.textBaseline='top';
+    const nm=c.name||(c.id);
+    ctx.fillText(nm.length>14?nm.slice(0,13)+'…':nm, n.x, n.y+r+5);
+
+    // Role tag
+    if(c.role){
+      ctx.fillStyle=roleColor+'aa';
+      ctx.font='10px DM Sans, sans-serif';
+      ctx.fillText(c.role,n.x,n.y+r+19);
+    }
+    ctx.textBaseline='alphabetic';
+  });
+}
+
+function getNodeAt(canvas,p,mx,my){
+  const chars=p.characters||[];
+  for(const c of chars){
+    const n=relNodes[c.id]; if(!n) continue;
+    const dx=mx-n.x, dy=my-n.y;
+    if(Math.sqrt(dx*dx+dy*dy)<=28) return c.id;
+  }
+  return null;
+}
+
+function setupCanvasEvents(canvas, p){
+  // Remove old listeners
+  canvas.onmousedown=null; canvas.onmousemove=null; canvas.onmouseup=null;
+  canvas.ontouchstart=null; canvas.ontouchmove=null; canvas.ontouchend=null;
+
+  function getPos(e){
+    const rect=canvas.getBoundingClientRect();
+    const cl=e.touches?e.touches[0]:e;
+    return {x:cl.clientX-rect.left, y:cl.clientY-rect.top};
+  }
+
+  canvas.onmousedown=canvas.ontouchstart=(e)=>{
+    if(e.touches) e.preventDefault();
+    const {x,y}=getPos(e);
+    const hit=getNodeAt(canvas,p,x,y);
+    if(hit){
+      isDragging=true; dragNode=hit;
+      const n=relNodes[hit];
+      dragOffX=x-n.x; dragOffY=y-n.y;
+      canvas.classList.add('grabbing');
+    }
+  };
+
+  canvas.onmousemove=canvas.ontouchmove=(e)=>{
+    if(e.touches) e.preventDefault();
+    const {x,y}=getPos(e);
+    if(isDragging && dragNode){
+      relNodes[dragNode].x=x-dragOffX;
+      relNodes[dragNode].y=y-dragOffY;
+      drawGraph();
+    } else {
+      // Tooltip
+      const hit=getNodeAt(canvas,p,x,y);
+      const tt=document.getElementById('rel-tooltip');
+      if(hit){
+        const c=(p.characters||[]).find(ch=>ch.id===hit);
+        if(c){
+          tt.innerHTML=`<strong>${esc(c.name)}</strong><br>${esc(c.role||'')}${c.age?' · '+c.age+' J.':''}${c.job?'<br>'+esc(c.job):''}`;
+          tt.style.left=(x+12)+'px'; tt.style.top=(y-8)+'px';
+          tt.classList.add('visible');
+        }
+      } else {
+        tt.classList.remove('visible');
+      }
+    }
+  };
+
+  canvas.onmouseup=canvas.ontouchend=(e)=>{
+    if(e.touches) e.preventDefault();
+    if(!isDragging){
+      const {x,y}=getPos(e)||{};
+      if(x!==undefined){
+        const hit=getNodeAt(canvas,p,x,y);
+        if(hit){
+          if(!relFirstClick){
+            relFirstClick=hit;
+            drawGraph();
+            toast('Klicke jetzt die zweite Figur für eine Verbindung — oder klicke nochmal zum Abbrechen.','');
+          } else if(relFirstClick===hit){
+            relFirstClick=null; drawGraph();
+          } else {
+            // Auto-open rel modal
+            document.getElementById('mr-a').value=relFirstClick;
+            document.getElementById('mr-b').value=hit;
+            relFirstClick=null;
+            openModal('modal-rel');
+            drawGraph();
+          }
+        }
+      }
+    }
+    isDragging=false; dragNode=null;
+    canvas.classList.remove('grabbing');
+  };
+}
+
+// ==============================================
+// CHARACTERS
+// ==============================================
+function renderCharsGrid(){
+  const p=curProj(); if(!p) return;
+  const grid=document.getElementById('characters-grid');
+  let h='';
+  (p.characters||[]).forEach(c=>{
+    h+=`<div class="char-card" onclick="openCharDetail('${c.id}')">
+      <div class="char-avatar">${(c.name||'?')[0].toUpperCase()}</div>
+      <h4>${esc(c.name)}</h4>
+      <div class="char-role">${esc(c.role||'')}</div>
+      <div class="char-desc">${esc(c.description||'')}</div>
+    </div>`;
+  });
+  h+=`<div class="add-card" onclick="openAddCharModal()"><div class="plus">+</div><span>Neue Figur</span></div>`;
+  grid.innerHTML=h;
+}
+
+function openCharDetail(id){
+  const p=curProj(); if(!p) return;
+  const c=(p.characters||[]).find(x=>x.id===id); if(!c) return;
+  S.curChar=id; save();
+  const flds={name:'cd-name',role:'cd-role',age:'cd-age',gender:'cd-gender',job:'cd-job',origin:'cd-origin',birthplace:'cd-birthplace',
+    hair:'cd-hair',eyes:'cd-eyes',height:'cd-height',build:'cd-build',marks:'cd-marks',clothing:'cd-clothing',
+    description:'cd-desc',personality:'cd-personality',background:'cd-bg',motivation:'cd-motivation',
+    goal:'cd-goal',fear:'cd-fear',speech:'cd-speech',quote:'cd-quote',relations:'cd-relations',notes:'cd-notes'};
+  Object.entries(flds).forEach(([k,id])=>{ const el=document.getElementById(id); if(el) el.value=c[k]||''; });
+  updateAvatar();
+  showView('character');
+  const proj=curProj();
+  breadcrumb([{label:'Projekte',fn:'showDashboard()'},{label:proj.title,fn:'showProject()'},{label:c.name||'Figur',fn:''}]);
+}
+
+function updateAvatar(){
+  const name=document.getElementById('cd-name').value;
+  document.getElementById('cd-avatar').textContent=(name||'?')[0].toUpperCase();
+}
+
+function saveChar(){
+  const p=curProj(); if(!p) return;
+  const c=(p.characters||[]).find(x=>x.id===S.curChar); if(!c) return;
+  const flds={name:'cd-name',role:'cd-role',age:'cd-age',gender:'cd-gender',job:'cd-job',origin:'cd-origin',birthplace:'cd-birthplace',
+    hair:'cd-hair',eyes:'cd-eyes',height:'cd-height',build:'cd-build',marks:'cd-marks',clothing:'cd-clothing',
+    description:'cd-desc',personality:'cd-personality',background:'cd-bg',motivation:'cd-motivation',
+    goal:'cd-goal',fear:'cd-fear',speech:'cd-speech',quote:'cd-quote',relations:'cd-relations',notes:'cd-notes'};
+  Object.entries(flds).forEach(([k,eid])=>{ const el=document.getElementById(eid); if(el) c[k]=el.value; });
+  p.updatedAt=Date.now(); save();
+}
+
+function deleteChar(){
+  if(!confirm('Figur löschen?')) return;
+  const p=curProj(); if(!p) return;
+  p.characters=(p.characters||[]).filter(c=>c.id!==S.curChar);
+  p.relationships=(p.relationships||[]).filter(r=>r.a!==S.curChar&&r.b!==S.curChar);
+  p.updatedAt=Date.now(); save();
+  backToProject(); toast('Figur gelöscht.');
+}
+
+// ==============================================
+// LOCATIONS
+// ==============================================
+const LOC_ICONS={Stadt:'🏙',Dorf:'🏘',Gebäude:'🏛',Natur:'🌲',Innenraum:'🪑',Straße:'🛣',Wasser:'🌊',Unterirdisch:'⛏',Fantastisch:'✨',Sonstiges:'📍'};
+const LOC_COLORS={Stadt:'#5a7a9a',Dorf:'#8a6e30',Gebäude:'#6b4e8a',Natur:'#3a6b3a',Innenraum:'#c9a84c',Straße:'#7a6e68',Wasser:'#2d6e6e',Unterirdisch:'#5a4a3a',Fantastisch:'#e84393',Sonstiges:'#888'};
+
+function renderLocsGrid(){
+  const p=curProj(); if(!p) return;
+  const grid=document.getElementById('locations-grid');
+  let h='';
+  (p.locations||[]).forEach(l=>{
+    const icon=LOC_ICONS[l.type]||'📍';
+    const col=LOC_COLORS[l.type]||'#888';
+    h+=`<div class="loc-card" onclick="openLocDetail('${l.id}')" style="--loc-col:${col}">
+      <style>#loc-${l.id}::before{background:${col}}</style>
+      <div id="loc-${l.id}" class="loc-card" style="display:contents">
+      <div class="loc-icon">${icon}</div>
+      <h4>${esc(l.name)}</h4>
+      <div class="loc-type-badge">${esc(l.type||'')}</div>
+      <div class="loc-desc">${esc(l.description||'')}</div>
+      </div>
+    </div>`;
+  });
+  // Fix: simpler render
+  let h2='';
+  (p.locations||[]).forEach(l=>{
+    const icon=LOC_ICONS[l.type]||'📍';
+    const col=LOC_COLORS[l.type]||'#888';
+    h2+=`<div class="loc-card" onclick="openLocDetail('${l.id}')" style="border-left:4px solid ${col}">
+      <div class="loc-icon">${icon}</div>
+      <h4>${esc(l.name)}</h4>
+      <div class="loc-type-badge">${esc(l.type||'')}</div>
+      <div class="loc-desc">${esc(l.description||'')}</div>
+    </div>`;
+  });
+  h2+=`<div class="add-card" onclick="openAddOrtModal()"><div class="plus">+</div><span>Neuer Ort</span></div>`;
+  grid.innerHTML=h2;
+}
+
+function openLocDetail(id){
+  const p=curProj(); if(!p) return;
+  const l=(p.locations||[]).find(x=>x.id===id); if(!l) return;
+  S.curLoc=id; save();
+  const flds={name:'ld-name',type:'ld-type',region:'ld-region',era:'ld-era',climate:'ld-climate',
+    description:'ld-desc',longDescription:'ld-long',mood:'ld-mood',senses:'ld-senses',
+    history:'ld-history',relevance:'ld-relevance',notes:'ld-notes'};
+  Object.entries(flds).forEach(([k,eid])=>{ const el=document.getElementById(eid); if(el) el.value=l[k]||''; });
+  updateLocIcon();
+  showView('location');
+  const proj=curProj();
+  breadcrumb([{label:'Projekte',fn:'showDashboard()'},{label:proj.title,fn:'showProject()'},{label:l.name||'Ort',fn:''}]);
+}
+
+function updateLocIcon(){
+  const type=document.getElementById('ld-type').value;
+  document.getElementById('loc-icon-display').textContent=LOC_ICONS[type]||'📍';
+}
+
+function saveLoc(){
+  const p=curProj(); if(!p) return;
+  const l=(p.locations||[]).find(x=>x.id===S.curLoc); if(!l) return;
+  const flds={name:'ld-name',type:'ld-type',region:'ld-region',era:'ld-era',climate:'ld-climate',
+    description:'ld-desc',longDescription:'ld-long',mood:'ld-mood',senses:'ld-senses',
+    history:'ld-history',relevance:'ld-relevance',notes:'ld-notes'};
+  Object.entries(flds).forEach(([k,eid])=>{ const el=document.getElementById(eid); if(el) l[k]=el.value; });
+  p.updatedAt=Date.now(); save();
+}
+
+function deleteLoc(){
+  if(!confirm('Ort löschen?')) return;
+  const p=curProj(); if(!p) return;
+  p.locations=(p.locations||[]).filter(l=>l.id!==S.curLoc);
+  p.updatedAt=Date.now(); save();
+  backToProject(); toast('Ort gelöscht.');
+}
+
+// ==============================================
+// EDITOR
+// ==============================================
+function openEditor(chId, scId){
+  const p=curProj(); if(!p) return;
+  const ch=(p.chapters||[]).find(c=>c.id===chId); if(!ch) return;
+  const sc=(ch.scenes||[]).find(s=>s.id===scId); if(!sc) return;
+  S.curChapter=chId; S.curScene=scId; save();
+  document.getElementById('e-ch-num').value=ch.num||'';
+  document.getElementById('e-ch-name').value=ch.title||'';
+  document.getElementById('e-sc-name').value=sc.title||'';
+  const ec=document.getElementById('editor-content');
+  ec.innerHTML=sc.content||'';
+  S.indentMode=sc.indentMode||false;
+  applyEditorCfg();
+  updateIndentBtn();
+  showView('editor');
+  const proj=curProj();
+  breadcrumb([{label:'Projekte',fn:'showDashboard()'},{label:proj.title,fn:'showProject()'},{label:ch.title||'Kapitel',fn:''}]);
+  document.getElementById('btn-export').style.display='';
+  updateWC();
+  setTimeout(()=>ec.focus(),80);
+  closeMobile();
+}
+
+function applyEditorCfg(){
+  const c=S.editorCfg, ec=document.getElementById('editor-content');
+  ec.style.fontSize=c.size+'px';
+  ec.style.fontFamily=c.font;
+  ec.style.lineHeight=c.lh;
+  document.getElementById('sel-size').value=c.size;
+  document.getElementById('sel-font').value=c.font;
+  document.getElementById('sel-lh').value=c.lh;
+}
+
+function onKey(e){
+  if(e.key==='Enter'){ e.preventDefault(); document.execCommand('insertParagraph'); schedSave(); }
+}
+function onInput(){ updateWC(); schedSave(); }
+function schedSave(){ clearTimeout(autoSaveT); autoSaveT=setTimeout(saveEditorContent,800); }
+
+function saveEditorContent(){
+  const p=curProj(); if(!p) return;
+  const ch=(p.chapters||[]).find(c=>c.id===S.curChapter); if(!ch) return;
+  const sc=(ch.scenes||[]).find(s=>s.id===S.curScene); if(!sc) return;
+  sc.content=document.getElementById('editor-content').innerHTML;
+  sc.indentMode=S.indentMode;
+  p.updatedAt=Date.now(); save();
+}
+
+function saveMeta(){
+  const p=curProj(); if(!p) return;
+  const ch=(p.chapters||[]).find(c=>c.id===S.curChapter); if(!ch) return;
+  const sc=(ch.scenes||[]).find(s=>s.id===S.curScene); if(!sc) return;
+  ch.num=document.getElementById('e-ch-num').value;
+  ch.title=document.getElementById('e-ch-name').value;
+  sc.title=document.getElementById('e-sc-name').value;
+  p.updatedAt=Date.now(); save();
+  renderSidebar();
+}
+
+function updateWC(){
+  const ec=document.getElementById('editor-content');
+  const n=wc(ec.innerText||ec.textContent||'');
+  const t=n.toLocaleString('de')+' Wörter';
+  document.getElementById('wc1').textContent=t;
+  document.getElementById('wc2').textContent=t;
+}
+
+function fmt(cmd){ document.execCommand(cmd); document.getElementById('editor-content').focus(); }
+function setFontSize(v){ S.editorCfg.size=v; document.getElementById('editor-content').style.fontSize=v+'px'; save(); }
+function setFont(v){ S.editorCfg.font=v; document.getElementById('editor-content').style.fontFamily=v; save(); }
+function setLineH(v){ S.editorCfg.lh=v; document.getElementById('editor-content').style.lineHeight=v; save(); }
+
+function toggleIndent(){
+  S.indentMode=!S.indentMode;
+  updateIndentBtn();
+  saveEditorContent();
+}
+function updateIndentBtn(){
+  const btn=document.getElementById('btn-indent');
+  const pg=document.getElementById('editor-page');
+  btn.classList.toggle('active',S.indentMode);
+  pg.classList.toggle('indent-mode',S.indentMode);
+}
+
+// ==============================================
+// SIDEBAR
+// ==============================================
+function renderSidebar(){
+  const p=curProj();
+  // Structure
+  const sl=document.getElementById('sb-structure-list');
+  if(!p){ sl.innerHTML='<div style="font-size:12px;color:var(--ink-muted);padding:8px 6px">Kein Projekt ausgewählt.</div>'; }
+  else {
+    let h='';
+    (p.chapters||[]).forEach(ch=>{
+      h+=`<div class="sidebar-item" onclick="openFirstScene('${ch.id}')">
+        <span class="item-icon" style="font-size:11px;color:var(--gold)">${ch.num||''}</span>
+        <span class="item-text">${esc(ch.title)}</span>
+        <span class="item-badge">${(ch.scenes||[]).length}</span>
+      </div>`;
+      (ch.scenes||[]).forEach(s=>{
+        const active=S.curScene===s.id?' active':'';
+        h+=`<div class="scene-item${active}" onclick="openEditor('${ch.id}','${s.id}')">${esc(s.title||'Szene')}</div>`;
+      });
+    });
+    sl.innerHTML=h||'<div style="font-size:12px;color:var(--ink-muted);padding:8px 6px">Noch keine Kapitel.</div>';
+  }
+  // Chars
+  const cl=document.getElementById('sb-chars-list');
+  if(!p){ cl.innerHTML=''; }
+  else {
+    let h='';
+    (p.characters||[]).forEach(c=>{
+      h+=`<div class="sidebar-item" onclick="openCharDetail('${c.id}')">
+        <span class="item-icon">${(c.name||'?')[0].toUpperCase()}</span>
+        <span class="item-text">${esc(c.name)}</span>
+        <span class="item-badge" style="background:rgba(45,110,110,.15);color:var(--teal)">${esc(c.role||'')}</span>
+      </div>`;
+    });
+    cl.innerHTML=h||'<div style="font-size:12px;color:var(--ink-muted);padding:8px 6px">Keine Figuren.</div>';
+  }
+  // Orte
+  const ol=document.getElementById('sb-orte-list');
+  if(!p){ ol.innerHTML=''; }
+  else {
+    let h='';
+    (p.locations||[]).forEach(l=>{
+      const icon=LOC_ICONS[l.type]||'📍';
+      h+=`<div class="sidebar-item" onclick="openLocDetail('${l.id}')">
+        <span class="item-icon">${icon}</span>
+        <span class="item-text">${esc(l.name)}</span>
+        <span class="item-badge" style="background:rgba(45,110,110,.1);color:var(--teal-light)">${esc(l.type||'')}</span>
+      </div>`;
+    });
+    ol.innerHTML=h||'<div style="font-size:12px;color:var(--ink-muted);padding:8px 6px">Keine Orte.</div>';
+  }
+}
+
+// ==============================================
+// MODALS
+// ==============================================
+function openModal(id){ const el=document.getElementById(id); if(el){ el.classList.add('open'); setTimeout(()=>el.querySelector('input,textarea')?.focus(),100); } }
+function closeModal(id){ const el=document.getElementById(id); if(el) el.classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('open'); }));
+
+function saveProjectModal(){
+  const t=document.getElementById('mp-title').value.trim();
+  if(!t){ toast('Bitte einen Titel eingeben.','error'); return; }
+  const p={id:uid(),title:t,subtitle:document.getElementById('mp-sub').value.trim(),
+    genre:document.getElementById('mp-genre').value,description:document.getElementById('mp-desc').value.trim(),
+    chapters:[],characters:[],locations:[],relationships:[],notes:'',createdAt:Date.now(),updatedAt:Date.now()};
+  S.projects.push(p); save();
+  closeModal('modal-project');
+  ['mp-title','mp-sub','mp-desc'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  renderDashboard();
+  showProject(p.id);
+  toast('Projekt angelegt!','success');
+}
+
+function openAddChapterModal(){
+  const p=curProj();
+  document.getElementById('mch-num').value=(p?.chapters?.length||0)+1;
+  document.getElementById('mch-name').value='';
+  document.getElementById('mch-note').value='';
+  document.getElementById('mch-title').textContent='Neues Kapitel';
+  document.getElementById('mch-ok').onclick=saveChapterModal;
+  openModal('modal-chapter');
+}
+
+function saveChapterModal(){
+  const name=document.getElementById('mch-name').value.trim();
+  if(!name){ toast('Bitte Kapitelname eingeben.','error'); return; }
+  const p=curProj(); if(!p) return;
+  const ch={id:uid(),num:document.getElementById('mch-num').value,title:name,note:document.getElementById('mch-note').value.trim(),scenes:[]};
+  p.chapters.push(ch); p.updatedAt=Date.now(); save();
+  closeModal('modal-chapter');
+  renderStoryboard(); renderSidebar();
+  toast('Kapitel erstellt!','success');
+}
+
+function editChapter(id){
+  const p=curProj(); const ch=(p?.chapters||[]).find(c=>c.id===id); if(!ch) return;
+  document.getElementById('mch-num').value=ch.num||'';
+  document.getElementById('mch-name').value=ch.title||'';
+  document.getElementById('mch-note').value=ch.note||'';
+  document.getElementById('mch-title').textContent='Kapitel bearbeiten';
+  document.getElementById('mch-ok').onclick=()=>{
+    ch.num=document.getElementById('mch-num').value;
+    ch.title=document.getElementById('mch-name').value.trim();
+    ch.note=document.getElementById('mch-note').value.trim();
+    p.updatedAt=Date.now(); save();
+    closeModal('modal-chapter');
+    renderStoryboard(); renderSidebar();
+    document.getElementById('mch-ok').onclick=saveChapterModal;
+    toast('Kapitel aktualisiert!','success');
+  };
+  openModal('modal-chapter');
+}
+
+function delChapter(id){
+  if(!confirm('Kapitel löschen?')) return;
+  const p=curProj(); if(!p) return;
+  p.chapters=(p.chapters||[]).filter(c=>c.id!==id); p.updatedAt=Date.now(); save();
+  renderStoryboard(); renderSidebar();
+  // Fix: auch Timeline und Buch-Sidebar aktualisieren
+  if(document.getElementById('tab-timeline').classList.contains('active')) renderTimeline();
+  renderBuchSidebar();
+  toast('Kapitel gelöscht.');
+}
+
+function openAddSceneModal(chId){
+  pendingChId=chId;
+  document.getElementById('ms-name').value='';
+  document.getElementById('ms-note').value='';
+  openModal('modal-scene');
+}
+
+function saveSceneModal(){
+  const name=document.getElementById('ms-name').value.trim();
+  if(!name){ toast('Bitte Szenentitel eingeben.','error'); return; }
+  const p=curProj(); if(!p) return;
+  const ch=(p.chapters||[]).find(c=>c.id===pendingChId); if(!ch) return;
+  const sc={id:uid(),title:name,note:document.getElementById('ms-note').value.trim(),content:'',indentMode:false};
+  ch.scenes.push(sc); p.updatedAt=Date.now(); save();
+  closeModal('modal-scene');
+  renderStoryboard(); renderSidebar();
+  openEditor(pendingChId,sc.id);
+  toast('Szene erstellt!','success');
+}
+
+function delScene(chId,scId){
+  if(!confirm('Szene und Text löschen?')) return;
+  const p=curProj(); const ch=(p?.chapters||[]).find(c=>c.id===chId); if(!ch) return;
+  ch.scenes=ch.scenes.filter(s=>s.id!==scId); p.updatedAt=Date.now(); save();
+  renderStoryboard(); renderSidebar(); toast('Szene gelöscht.');
+}
+
+function openFirstScene(chId){
+  const p=curProj(); const ch=(p?.chapters||[]).find(c=>c.id===chId); if(!ch) return;
+  if(ch.scenes?.length) openEditor(chId,ch.scenes[0].id);
+  else openAddSceneModal(chId);
+}
+
+function openAddCharModal(){
+  document.getElementById('mc-name').value='';
+  document.getElementById('mc-desc').value='';
+  openModal('modal-char');
+}
+
+function saveCharModal(){
+  const name=document.getElementById('mc-name').value.trim();
+  if(!name){ toast('Bitte Namen eingeben.','error'); return; }
+  const p=curProj(); if(!p) return;
+  if(!p.characters) p.characters=[];
+  const c={id:uid(),name,role:document.getElementById('mc-role').value,
+    description:document.getElementById('mc-desc').value.trim(),createdAt:Date.now()};
+  p.characters.push(c); p.updatedAt=Date.now(); save();
+  closeModal('modal-char');
+  renderCharsGrid(); renderSidebar();
+  toast('Figur angelegt!','success');
+}
+
+function openAddOrtModal(){
+  document.getElementById('mo-name').value='';
+  document.getElementById('mo-desc').value='';
+  openModal('modal-ort');
+}
+
+function saveOrtModal(){
+  const name=document.getElementById('mo-name').value.trim();
+  if(!name){ toast('Bitte Namen eingeben.','error'); return; }
+  const p=curProj(); if(!p) return;
+  if(!p.locations) p.locations=[];
+  const l={id:uid(),name,type:document.getElementById('mo-type').value,
+    description:document.getElementById('mo-desc').value.trim(),createdAt:Date.now()};
+  p.locations.push(l); p.updatedAt=Date.now(); save();
+  closeModal('modal-ort');
+  renderLocsGrid(); renderSidebar();
+  toast('Ort angelegt!','success');
+}
+
+// Relationship modal
+function openAddRelModal(){
+  const p=curProj(); if(!p) return;
+  const chars=p.characters||[];
+  if(chars.length<2){ toast('Mindestens 2 Figuren benötigt.','error'); return; }
+  ['mr-a','mr-b'].forEach(id=>{
+    const sel=document.getElementById(id);
+    sel.innerHTML=chars.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
+  });
+  document.getElementById('mr-b').selectedIndex=1;
+  document.getElementById('mr-desc').value='';
+  document.getElementById('mr-dupe-warn').style.display='none';
+  // Reset type selection
+  document.querySelectorAll('.rel-type-btn').forEach((b,i)=>b.classList.toggle('selected',i===0));
+  openModal('modal-rel');
+}
+
+function selectRelType(btn){
+  document.querySelectorAll('.rel-type-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+function checkRelDupe(){
+  const a=document.getElementById('mr-a').value;
+  const b=document.getElementById('mr-b').value;
+  const p=curProj(); if(!p) return;
+  const dupe=(p.relationships||[]).some(r=>(r.a===a&&r.b===b)||(r.a===b&&r.b===a));
+  document.getElementById('mr-dupe-warn').style.display=dupe?'block':'none';
+}
+
+function saveRelModal(){
+  const a=document.getElementById('mr-a').value;
+  const b=document.getElementById('mr-b').value;
+  if(a===b){ toast('Bitte zwei verschiedene Figuren wählen.','error'); return; }
+  const type=document.querySelector('.rel-type-btn.selected')?.dataset.type||'Bekannt';
+  const desc=document.getElementById('mr-desc').value.trim();
+  const p=curProj(); if(!p) return;
+  if(!p.relationships) p.relationships=[];
+  // Replace if exists
+  p.relationships=p.relationships.filter(r=>!((r.a===a&&r.b===b)||(r.a===b&&r.b===a)));
+  p.relationships.push({id:uid(),a,b,type,description:desc});
+  p.updatedAt=Date.now(); save();
+  closeModal('modal-rel');
+  drawGraph();
+  toast('Verbindung gespeichert!','success');
+}
+
+// ==============================================
+// PROJECT SETTINGS
+// ==============================================
+function updateSettings(){
+  const p=curProj(); if(!p) return;
+  p.title=document.getElementById('s-title').value;
+  p.subtitle=document.getElementById('s-sub').value;
+  p.genre=document.getElementById('s-genre').value;
+  p.description=document.getElementById('s-desc').value;
+  // New fields
+  p.author=document.getElementById('s-author').value;
+  p.publisher=document.getElementById('s-publisher').value;
+  p.backcover=document.getElementById('s-backcover').value;
+  p.isbn=document.getElementById('s-isbn').value;
+  p.year=document.getElementById('s-year').value;
+  p.updatedAt=Date.now(); save();
+  document.getElementById('proj-title').textContent=p.title;
+  const sub=p.subtitle?' — '+p.subtitle:'';
+  document.getElementById('proj-meta').textContent=(p.genre||'Roman')+sub;
+  renderDashboard();
+  updateSpinePreview();
+}
+
+function saveNotes(){
+  const p=curProj(); if(!p) return;
+  p.notes=document.getElementById('proj-notes-ta').value;
+  p.updatedAt=Date.now(); save();
+}
+
+function deleteProject(){
+  const p=curProj(); if(!p) return;
+  if(!confirm(`"${p.title}" endgültig löschen?`)) return;
+  S.projects=S.projects.filter(x=>x.id!==p.id);
+  S.curProject=null; save();
+  showDashboard(); toast('Projekt gelöscht.');
+}
+
+function delProject(id){
+  if(!confirm('Projekt löschen?')) return;
+  S.projects=S.projects.filter(p=>p.id!==id); save();
+  renderDashboard(); toast('Projekt gelöscht.');
+}
+
+// ==============================================
+// EXPORT / IMPORT
+// ==============================================
+function exportProject(){
+  const p=curProj(); if(!p){ toast('Kein Projekt ausgewählt.','error'); return; }
+  const data=JSON.stringify({schreibstudio:true,version:2,project:p},null,2);
+  const blob=new Blob([data],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download=(p.title||'projekt').replace(/[^a-zA-Z0-9äöüÄÖÜß\s]/g,'_')+'.schreibstudio.json';
+  a.click(); URL.revokeObjectURL(url);
+  toast('Exportiert!','success');
+}
+
+function importProject(){ document.getElementById('import-input').click(); }
+
+function handleImport(e){
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try {
+      const data=JSON.parse(ev.target.result);
+      if(data.schreibstudio&&data.project){
+        const p=data.project;
+        // Ensure new fields
+        if(!p.locations) p.locations=[];
+        if(!p.relationships) p.relationships=[];
+        const ex=S.projects.findIndex(x=>x.id===p.id);
+        if(ex>=0){
+          if(confirm('Projekt mit dieser ID existiert. Überschreiben?')) S.projects[ex]=p;
+          else { p.id=uid(); p.title+=' (Import)'; S.projects.push(p); }
+        } else { S.projects.push(p); }
+        save(); renderDashboard(); showProject(p.id);
+        toast('Importiert!','success');
+      } else { toast('Ungültige Datei.','error'); }
+    } catch(err){ toast('Fehler beim Import.','error'); }
+  };
+  reader.readAsText(file);
+  e.target.value='';
+}
+
+// ==============================================
+// SPELLCHECK (LanguageTool API)
+// ==============================================
+let ltMatches = [];
+let ltIgnored = new Set();
+let ltActiveId = null;
+
+async function runSpellcheck() {
+  const ec = document.getElementById('editor-content');
+  const text = ec.innerText || ec.textContent || '';
+  if (!text.trim()) { toast('Kein Text zum Prüfen.', 'error'); return; }
+
+  const panel = document.getElementById('spellcheck-panel');
+  panel.classList.add('open');
+
+  const status = document.getElementById('sp-status');
+  const statusTxt = document.getElementById('sp-status-text');
+  const spinner = document.getElementById('sp-spinner');
+  const btn = document.getElementById('btn-spellcheck');
+  const btnIcon = document.getElementById('sp-btn-icon');
+
+  status.style.display = 'flex';
+  statusTxt.textContent = 'Verbinde mit LanguageTool …';
+  spinner.style.display = '';
+  btn.disabled = true;
+  btnIcon.textContent = '⏳';
+  document.getElementById('sp-summary').style.display = 'none';
+  document.getElementById('sp-errors-list').innerHTML = '';
+
+  const lang = document.getElementById('lt-lang').value;
+
+  try {
+    const body = new URLSearchParams();
+    body.append('text', text);
+    body.append('language', lang);
+    body.append('enabledOnly', 'false');
+
+    const res = await fetch('https://api.languagetool.org/v2/check', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body.toString()
+    });
+
+    if (!res.ok) throw new Error('API-Fehler: ' + res.status);
+    const data = await res.json();
+
+    ltMatches = (data.matches || []).filter(m => !ltIgnored.has(matchKey(m)));
+    renderSpellResults(text);
+    highlightErrors(ec, text, ltMatches);
+
+  } catch(err) {
+    status.style.display = 'none';
+    document.getElementById('sp-errors-list').innerHTML =
+      `<div class="sp-empty" style="color:var(--red-soft)">
+        <div class="sp-ok-icon">⚠</div>
+        <div>Verbindung fehlgeschlagen.<br><small>Prüfe deine Internetverbindung.<br>LanguageTool: api.languagetool.org</small></div>
+      </div>`;
+    toast('LanguageTool nicht erreichbar.', 'error');
+  } finally {
+    btn.disabled = false;
+    btnIcon.textContent = '✓';
+    spinner.style.display = 'none';
+  }
+}
+
+function matchKey(m) {
+  return m.offset + '_' + m.length + '_' + (m.rule?.id || '');
+}
+
+function matchCategory(m) {
+  const cat = m.rule?.category?.id || '';
+  const type = m.rule?.issueType || '';
+  if (type === 'misspelling' || cat.includes('TYPOS') || cat.includes('SPELL')) return 'spell';
+  if (type === 'style' || cat.includes('STYLE') || cat.includes('REDUNDANCY')) return 'style';
+  return 'grammar';
+}
+
+function renderSpellResults(origText) {
+  const list = document.getElementById('sp-errors-list');
+  const status = document.getElementById('sp-status');
+  const summary = document.getElementById('sp-summary');
+
+  status.style.display = 'none';
+
+  if (!ltMatches.length) {
+    list.innerHTML = `<div class="sp-empty"><div class="sp-ok-icon">🎉</div><div>Keine Fehler gefunden!</div></div>`;
+    summary.style.display = 'none';
+    return;
+  }
+
+  let spell = 0, gram = 0, style = 0;
+  let html = '';
+
+  ltMatches.forEach((m, i) => {
+    const cat = matchCategory(m);
+    if (cat === 'spell') spell++;
+    else if (cat === 'style') style++;
+    else gram++;
+
+    const word = origText.substr(m.offset, m.length);
+    const sugs = (m.replacements || []).slice(0, 6);
+    const sugHtml = sugs.map(s =>
+      `<button class="sp-sug-btn" onclick="applySuggestion(${i},'${escJs(s.value)}')">${esc(s.value)}</button>`
+    ).join('');
+
+    html += `<div class="sp-error-item" id="sperr-${i}" onclick="focusError(${i})">
+      <div class="sp-error-word sp-${cat}">${esc(word||'(leer)')}</div>
+      <div class="sp-error-msg">${esc(m.message||'')}</div>
+      ${sugHtml ? `<div class="sp-suggestions">${sugHtml}</div>` : ''}
+      <div style="margin-top:6px">
+        <button class="sp-ignore-btn" onclick="event.stopPropagation();ignoreError(${i})">Ignorieren</button>
+      </div>
+    </div>`;
+  });
+
+  list.innerHTML = html;
+
+  document.getElementById('sp-cnt-spell').textContent = spell;
+  document.getElementById('sp-cnt-gram').textContent = gram;
+  document.getElementById('sp-cnt-style').textContent = style;
+  summary.style.display = 'flex';
+}
+
+function highlightErrors(ec, origText, matches) {
+  // Save cursor
+  const sel = window.getSelection();
+  const hadFocus = document.activeElement === ec;
+
+  // Work from the plain text — rebuild innerHTML with <mark> spans
+  // We operate on the full innerText and re-inject HTML
+  // To avoid breaking existing <p> tags we do a targeted replacement
+  clearSpellHighlights();
+
+  // Build an array of all text nodes and their offsets
+  const walker = document.createTreeWalker(ec, NodeFilter.SHOW_TEXT);
+  let nodes = [];
+  let node;
+  while ((node = walker.nextNode())) nodes.push(node);
+
+  // Map global offset → {node, localOffset}
+  let globalOffset = 0;
+  let nodeMap = []; // [{node, start, end}]
+  nodes.forEach(n => {
+    const len = n.textContent.length;
+    nodeMap.push({ node: n, start: globalOffset, end: globalOffset + len });
+    globalOffset += len;
+  });
+
+  // Apply highlights from back to front to preserve offsets
+  const sorted = [...matches].map((m, i) => ({ ...m, _idx: i }))
+    .sort((a, b) => b.offset - a.offset);
+
+  sorted.forEach(m => {
+    const cat = matchCategory(m);
+    const start = m.offset;
+    const end = m.offset + m.length;
+
+    // Find nodes overlapping this range
+    const relevant = nodeMap.filter(nm => nm.start < end && nm.end > start);
+    if (!relevant.length) return;
+
+    // Simple case: single text node
+    if (relevant.length === 1) {
+      const nm = relevant[0];
+      const localStart = start - nm.start;
+      const localEnd = end - nm.start;
+      const text = nm.node.textContent;
+
+      const before = document.createTextNode(text.slice(0, localStart));
+      const mark = document.createElement('mark');
+      mark.className = 'lt-error lt-' + cat;
+      mark.dataset.idx = m._idx;
+      mark.textContent = text.slice(localStart, localEnd);
+      mark.title = m.message || '';
+      mark.onclick = (e) => { e.stopPropagation(); focusError(m._idx); };
+      const after = document.createTextNode(text.slice(localEnd));
+
+      const parent = nm.node.parentNode;
+      parent.insertBefore(before, nm.node);
+      parent.insertBefore(mark, nm.node);
+      parent.insertBefore(after, nm.node);
+      parent.removeChild(nm.node);
+      // Update nodeMap entry
+      nm.node = after;
+    }
+  });
+}
+
+function clearSpellHighlights() {
+  const ec = document.getElementById('editor-content');
+  ec.querySelectorAll('mark.lt-error').forEach(mark => {
+    const text = document.createTextNode(mark.textContent);
+    mark.parentNode.replaceChild(text, mark);
+  });
+  // Normalize merges adjacent text nodes
+  ec.normalize();
+}
+
+function focusError(idx) {
+  ltActiveId = idx;
+  // Highlight active in panel
+  document.querySelectorAll('.sp-error-item').forEach(el => el.classList.remove('sp-active'));
+  const item = document.getElementById('sperr-' + idx);
+  if (item) {
+    item.classList.add('sp-active');
+    item.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+  // Scroll editor to mark
+  const mark = document.querySelector(`mark.lt-error[data-idx="${idx}"]`);
+  if (mark) mark.scrollIntoView({ block: 'center', behavior: 'smooth' });
+}
+
+function applySuggestion(idx, replacement) {
+  const mark = document.querySelector(`mark.lt-error[data-idx="${idx}"]`);
+  if (mark) {
+    const text = document.createTextNode(replacement);
+    mark.parentNode.replaceChild(text, mark);
+    document.getElementById('editor-content').normalize();
+  }
+  // Remove from list
+  ltMatches = ltMatches.filter((_, i) => i !== idx);
+  // Re-index remaining marks
+  reindexMarks();
+  const item = document.getElementById('sperr-' + idx);
+  if (item) item.remove();
+  updateSpellSummary();
+  saveEditorContent();
+  toast('Ersetzt: ' + replacement, 'success');
+}
+
+function ignoreError(idx) {
+  const m = ltMatches[idx];
+  if (m) ltIgnored.add(matchKey(m));
+  const mark = document.querySelector(`mark.lt-error[data-idx="${idx}"]`);
+  if (mark) {
+    const text = document.createTextNode(mark.textContent);
+    mark.parentNode.replaceChild(text, mark);
+    document.getElementById('editor-content').normalize();
+  }
+  ltMatches = ltMatches.filter((_, i) => i !== idx);
+  reindexMarks();
+  const item = document.getElementById('sperr-' + idx);
+  if (item) item.remove();
+  updateSpellSummary();
+}
+
+function reindexMarks() {
+  document.querySelectorAll('mark.lt-error').forEach((mark, i) => {
+    mark.dataset.idx = i;
+    mark.onclick = (e) => { e.stopPropagation(); focusError(i); };
+  });
+  // Re-index panel items
+  document.querySelectorAll('.sp-error-item').forEach((item, i) => {
+    item.id = 'sperr-' + i;
+    item.onclick = () => focusError(i);
+    item.querySelectorAll('.sp-sug-btn').forEach(btn => {
+      const val = btn.textContent;
+      btn.onclick = () => applySuggestion(i, val);
+    });
+    item.querySelectorAll('.sp-ignore-btn').forEach(btn => {
+      btn.onclick = (e) => { e.stopPropagation(); ignoreError(i); };
+    });
+  });
+}
+
+function updateSpellSummary() {
+  let spell = 0, gram = 0, style = 0;
+  ltMatches.forEach(m => {
+    const cat = matchCategory(m);
+    if (cat === 'spell') spell++;
+    else if (cat === 'style') style++;
+    else gram++;
+  });
+  document.getElementById('sp-cnt-spell').textContent = spell;
+  document.getElementById('sp-cnt-gram').textContent = gram;
+  document.getElementById('sp-cnt-style').textContent = style;
+  if (!ltMatches.length) {
+    document.getElementById('sp-errors-list').innerHTML =
+      `<div class="sp-empty"><div class="sp-ok-icon">🎉</div><div>Alle Fehler behoben!</div></div>`;
+    document.getElementById('sp-summary').style.display = 'none';
+  }
+}
+
+function closeSpellcheck() {
+  document.getElementById('spellcheck-panel').classList.remove('open');
+  clearSpellHighlights();
+  ltMatches = [];
+}
+
+function escJs(s) {
+  return (s || '').replace(/'/g, "\\'").replace(/"/g, '\\"');
+}
+
+// ==============================================
+// BUCH SCHREIBEN — direkter A4-Editor
+// ==============================================
+
+let buchCurChId = null;
+let buchAutoSaveT = null;
+let buchIndent = false;
+let buchCfg = { size: '17', font: "'Crimson Pro',Georgia,serif", lh: '1.9' };
+
+function buchInit() {
+  const p = curProj(); if (!p) return;
+  buchCfg = S.editorCfg ? { ...S.editorCfg } : buchCfg;
+  renderBuchSidebar();
+  if (buchCurChId && (p.chapters||[]).find(c=>c.id===buchCurChId)) {
+    buchOpenChapter(buchCurChId);
+  } else {
+    buchShowEmpty();
+  }
+  updateBuchTotalWC();
+}
+
+function renderBuchSidebar() {
+  const p = curProj(); if (!p) return;
+  const list = document.getElementById('buch-ch-list');
+  if (!(p.chapters||[]).length) {
+    list.innerHTML = `<div style="font-size:12px;color:var(--ink-muted);padding:12px 8px;text-align:center">Noch kein Inhalt.</div>`;
+    const pb = document.getElementById('buch-add-prolog');
+    if (pb) pb.style.display = '';
+    return;
+  }
+  let h = '';
+  const prologCh = p.chapters.find(c => c.isProlog);
+  const regularChs = p.chapters.filter(c => !c.isProlog);
+  if (prologCh) {
+    const w = buchChapterWC(prologCh);
+    const active = buchCurChId === prologCh.id ? ' active' : '';
+    h += `<div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-muted);padding:8px 8px 4px">Vorne</div>
+    <div class="buch-ch-item${active}" onclick="buchOpenChapter('${prologCh.id}')">
+      <div class="bch-num" style="color:var(--teal)">Prolog</div>
+      <div class="bch-title">${esc(prologCh.title||'Prolog')}</div>
+      <div class="bch-wc">${w.toLocaleString('de')} Wörter</div>
+    </div>`;
+    const pb = document.getElementById('buch-add-prolog');
+    if (pb) pb.style.display = 'none';
+  } else {
+    const pb = document.getElementById('buch-add-prolog');
+    if (pb) pb.style.display = '';
+  }
+  if (regularChs.length) {
+    h += `<div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-muted);padding:8px 8px 4px;margin-top:4px">Kapitel</div>`;
+    regularChs.forEach((ch, i) => {
+      const w = buchChapterWC(ch);
+      const active = buchCurChId === ch.id ? ' active' : '';
+      h += `<div class="buch-ch-item${active}" onclick="buchOpenChapter('${ch.id}')">
+        <div class="bch-num">Kapitel ${esc(ch.num||String(i+1))}</div>
+        <div class="bch-title">${esc(ch.title||'Unbenannt')}</div>
+        <div class="bch-wc">${w.toLocaleString('de')} Wörter</div>
+      </div>`;
+    });
+  }
+  list.innerHTML = h;
+}
+
+function buchChapterWC(ch) {
+  if (!ch.buchContent) return 0;
+  const d = document.createElement('div'); d.innerHTML = ch.buchContent;
+  return wc(d.textContent);
+}
+
+function updateBuchTotalWC() {
+  const p = curProj(); if (!p) return;
+  let total = 0;
+  (p.chapters||[]).forEach(ch => total += buchChapterWC(ch));
+  const el = document.getElementById('buch-total-wc');
+  if (el) el.textContent = total.toLocaleString('de') + ' Wörter gesamt';
+  const el2 = document.getElementById('buch-stat-wc-total');
+  if (el2) el2.textContent = total.toLocaleString('de');
+}
+
+function buchOpenChapter(chId) {
+  // Save current before switching
+  if (buchCurChId && buchCurChId !== chId) buchSaveContent();
+  const p = curProj(); if (!p) return;
+  const ch = (p.chapters||[]).find(c=>c.id===chId); if (!ch) return;
+  buchCurChId = chId;
+
+  document.getElementById('buch-empty').style.display = 'none';
+  document.getElementById('buch-scroll').style.display = 'flex';
+  document.getElementById('buch-scroll').classList.add('active-mobile');
+  document.getElementById('buch-chapter-bar').style.display = 'flex';
+  document.getElementById('buch-stats').style.display = 'flex';
+
+  document.getElementById('buch-ch-num-inp').value = ch.num || '';
+  document.getElementById('buch-ch-name-inp').value = ch.title || '';
+
+  buchIndent = ch.buchIndent || false;
+  buchUpdateIndentBtn();
+  buchBuildPage(ch);
+  renderBuchSidebar();
+  updateBuchTotalWC();
+
+  // Mobile: go fullscreen writing mode
+  if (isMobile()) {
+    const view = document.getElementById('buch-view');
+    const backBtn = document.getElementById('mobile-back-btn');
+    if (view) view.classList.add('mobile-writing');
+    if (backBtn) backBtn.classList.add('visible');
+  }
+
+  const chLabel = ch.isProlog ? 'Prolog' : (ch.num?'Kap.'+ch.num+': ':'')+(ch.title||'Unbenannt');
+  const el = document.getElementById('buch-stat-ch');
+  if (el) el.textContent = chLabel;
+}
+
+function buchBuildPage(ch) {
+  const scroll = document.getElementById('buch-scroll');
+  const isProlog = ch.isProlog;
+  const chNum = ch.num || '';
+  const chTitle = ch.title || '';
+
+  // Build ONE A4 page with direct editor inside
+  const page = document.createElement('div');
+  page.className = 'a4-page a4-first' + (buchIndent ? ' buch-indent' : '');
+  page.id = 'buch-a4-page';
+
+  const body = document.createElement('div');
+  body.className = 'a4-body';
+
+  // Heading
+  if (chNum || chTitle) {
+    const heading = document.createElement('div');
+    heading.className = 'a4-heading' + (isProlog ? ' prolog-heading' : '');
+    if (isProlog) {
+      heading.innerHTML = `<div class="a4-ch-label">Prolog</div>
+        ${chTitle && chTitle !== 'Prolog' ? `<div class="a4-ch-name">${esc(chTitle)}</div>` : ''}`;
+    } else {
+      heading.innerHTML = `
+        ${chNum ? `<div class="a4-ch-label">Kapitel ${esc(chNum)}</div>` : ''}
+        ${chTitle ? `<div class="a4-ch-name">${esc(chTitle)}</div>` : ''}`;
+    }
+    body.appendChild(heading);
+  }
+
+  // THE EDITOR — directly on the page, fully visible
+  const editor = document.createElement('div');
+  editor.className = 'a4-editor';
+  editor.id = 'buch-editor-direct';
+  editor.contentEditable = 'true';
+  editor.spellcheck = true;
+  editor.setAttribute('data-placeholder', 'Schreibe hier …');
+  editor.innerHTML = ch.buchContent || '';
+
+  // Apply formatting
+  editor.style.fontSize = buchCfg.size + 'px';
+  editor.style.fontFamily = buchCfg.font;
+  editor.style.lineHeight = buchCfg.lh;
+
+  editor.addEventListener('input', buchOnInput);
+  editor.addEventListener('keydown', buchOnKey);
+
+  body.appendChild(editor);
+
+  // Footer
+  const footer = document.createElement('div');
+  footer.className = 'a4-footer';
+  footer.textContent = '1';
+  page.appendChild(body);
+  page.appendChild(footer);
+
+  // Clear and insert
+  scroll.innerHTML = '';
+  scroll.appendChild(page);
+
+  buchUpdateWC();
+  setTimeout(() => editor.focus(), 60);
+}
+
+function buchShowEmpty() {
+  document.getElementById('buch-empty').style.display = 'flex';
+  const scroll = document.getElementById('buch-scroll');
+  scroll.style.display = 'none';
+  scroll.classList.remove('active-mobile');
+  document.getElementById('buch-chapter-bar').style.display = 'none';
+  document.getElementById('buch-stats').style.display = 'none';
+  const view = document.getElementById('buch-view');
+  if (view) view.classList.remove('mobile-writing');
+}
+
+function buchAddChapter() {
+  const p = curProj(); if (!p) return;
+  const chapterCount = (p.chapters||[]).filter(c=>!c.isProlog).length;
+  const num = chapterCount + 1;
+  const ch = { id:uid(), num:String(num), title:'Kapitel '+num, note:'', scenes:[], buchContent:'', buchIndent:false, isProlog:false };
+  p.chapters.push(ch); p.updatedAt=Date.now(); save();
+  renderBuchSidebar(); renderStoryboard(); renderSidebar();
+  buchOpenChapter(ch.id);
+  toast('Kapitel '+num+' erstellt!','success');
+}
+
+function buchAddProlog() {
+  const p = curProj(); if (!p) return;
+  const existing = (p.chapters||[]).find(c=>c.isProlog);
+  if (existing) { buchOpenChapter(existing.id); toast('Prolog geöffnet.',''); return; }
+  const prolog = { id:uid(), num:'0', title:'Prolog', note:'', scenes:[], buchContent:'', buchIndent:false, isProlog:true };
+  p.chapters.unshift(prolog); p.updatedAt=Date.now(); save();
+  renderBuchSidebar(); renderStoryboard(); renderSidebar();
+  buchOpenChapter(prolog.id);
+  toast('Prolog erstellt!','success');
+}
+
+function isMobile() { return window.innerWidth <= 768; }
+
+function buchMobileBack() {
+  const view = document.getElementById('buch-view');
+  if (view) view.classList.remove('mobile-writing');
+  buchSaveContent();
+  renderBuchSidebar();
+}
+
+function buchSaveContent() {
+  const p = curProj(); if (!p||!buchCurChId) return;
+  const ch = (p.chapters||[]).find(c=>c.id===buchCurChId); if (!ch) return;
+  const editor = document.getElementById('buch-editor-direct');
+  if (editor) ch.buchContent = editor.innerHTML;
+  ch.buchIndent = buchIndent;
+  p.updatedAt = Date.now(); save();
+  renderBuchSidebar(); updateBuchTotalWC();
+}
+
+function buchSaveMeta() {
+  const p = curProj(); if (!p||!buchCurChId) return;
+  const ch = (p.chapters||[]).find(c=>c.id===buchCurChId); if (!ch) return;
+  ch.num = document.getElementById('buch-ch-num-inp').value;
+  ch.title = document.getElementById('buch-ch-name-inp').value;
+  p.updatedAt=Date.now(); save();
+  // Update A4 heading live
+  const headingEl = document.querySelector('#buch-a4-page .a4-heading');
+  if (headingEl) {
+    if (ch.isProlog) {
+      headingEl.innerHTML = `<div class="a4-ch-label">Prolog</div>
+        ${ch.title && ch.title!=='Prolog' ? `<div class="a4-ch-name">${esc(ch.title)}</div>` : ''}`;
+    } else {
+      headingEl.innerHTML = `
+        ${ch.num ? `<div class="a4-ch-label">Kapitel ${esc(ch.num)}</div>` : ''}
+        ${ch.title ? `<div class="a4-ch-name">${esc(ch.title)}</div>` : ''}`;
+    }
+  }
+  const chLabel = ch.isProlog ? 'Prolog' : (ch.num?'Kap. '+ch.num+': ':'')+(ch.title||'Unbenannt');
+  const el = document.getElementById('buch-stat-ch');
+  if (el) el.textContent = chLabel;
+  renderBuchSidebar();
+  // Also sync with storyboard sidebar
+  renderSidebar();
+  renderStoryboard();
+}
+
+function buchOnInput() {
+  buchUpdateWC();
+  clearTimeout(buchAutoSaveT);
+  buchAutoSaveT = setTimeout(buchSaveContent, 800);
+}
+
+function buchOnKey(e) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    document.execCommand('insertParagraph');
+    buchOnInput();
+  }
+}
+
+function buchUpdateWC() {
+  const editor = document.getElementById('buch-editor-direct');
+  if (!editor) return;
+  const text = editor.innerText || editor.textContent || '';
+  const n = wc(text);
+  const wcEl = document.getElementById('buch-wc');
+  if (wcEl) wcEl.textContent = n.toLocaleString('de') + ' Wörter';
+  const el2 = document.getElementById('buch-stat-wc-ch');
+  if (el2) el2.textContent = n.toLocaleString('de');
+  // Page count: approximate 400 words per page
+  const pages = Math.max(1, Math.ceil(n / 280));
+  const el3 = document.getElementById('buch-stat-pages');
+  if (el3) el3.textContent = pages;
+  updateBuchTotalWC();
+}
+
+function buchApplyCfg() {
+  const editor = document.getElementById('buch-editor-direct');
+  if (!editor) return;
+  editor.style.fontSize = buchCfg.size + 'px';
+  editor.style.fontFamily = buchCfg.font;
+  editor.style.lineHeight = buchCfg.lh;
+  const ss = document.getElementById('buch-sel-size');
+  const sf = document.getElementById('buch-sel-font');
+  const sl = document.getElementById('buch-sel-lh');
+  if (ss) ss.value = buchCfg.size;
+  if (sf) sf.value = buchCfg.font;
+  if (sl) sl.value = buchCfg.lh;
+}
+
+function buchFmt(cmd) {
+  const editor = document.getElementById('buch-editor-direct');
+  if (editor) editor.focus();
+  document.execCommand(cmd);
+}
+
+function buchSetSize(v) {
+  buchCfg.size = v;
+  const editor = document.getElementById('buch-editor-direct');
+  if (editor) editor.style.fontSize = v + 'px';
+  S.editorCfg = { ...S.editorCfg, size: v }; save();
+}
+function buchSetFont(v) {
+  buchCfg.font = v;
+  const editor = document.getElementById('buch-editor-direct');
+  if (editor) editor.style.fontFamily = v;
+  S.editorCfg = { ...S.editorCfg, font: v }; save();
+}
+function buchSetLH(v) {
+  buchCfg.lh = v;
+  const editor = document.getElementById('buch-editor-direct');
+  if (editor) editor.style.lineHeight = v;
+  S.editorCfg = { ...S.editorCfg, lh: v }; save();
+}
+
+function buchToggleIndent() {
+  buchIndent = !buchIndent;
+  buchUpdateIndentBtn();
+  buchSaveContent();
+}
+
+function buchUpdateIndentBtn() {
+  const btn = document.getElementById('buch-btn-indent');
+  const page = document.getElementById('buch-a4-page');
+  if (btn) btn.classList.toggle('active', buchIndent);
+  if (page) page.classList.toggle('buch-indent', buchIndent);
+}
+
+async function buchSpellcheck() {
+  const ec = document.getElementById('buch-editor-direct');
+  const text = ec ? (ec.innerText||ec.textContent||'') : '';
+  if (!text.trim()) { toast('Kein Text zum Prüfen.','error'); return; }
+  const panel = document.getElementById('spellcheck-panel');
+  panel.classList.add('open');
+  const status = document.getElementById('sp-status');
+  const spinner = document.getElementById('sp-spinner');
+  status.style.display = 'flex';
+  document.getElementById('sp-status-text').textContent = 'Verbinde mit LanguageTool …';
+  spinner.style.display = '';
+  document.getElementById('sp-summary').style.display = 'none';
+  document.getElementById('sp-errors-list').innerHTML = '';
+  const lang = document.getElementById('buch-lt-lang').value;
+  try {
+    const body = new URLSearchParams();
+    body.append('text', text); body.append('language', lang);
+    const res = await fetch('https://api.languagetool.org/v2/check', {
+      method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:body.toString()
+    });
+    if (!res.ok) throw new Error('API-Fehler');
+    const data = await res.json();
+    ltMatches = (data.matches||[]).filter(m=>!ltIgnored.has(matchKey(m)));
+    renderSpellResults(text);
+    highlightErrors(ec, text, ltMatches);
+  } catch(err) {
+    status.style.display = 'none';
+    document.getElementById('sp-errors-list').innerHTML =
+      `<div class="sp-empty" style="color:var(--red-soft)"><div class="sp-ok-icon">⚠</div><div>Verbindung fehlgeschlagen.</div></div>`;
+    toast('LanguageTool nicht erreichbar.','error');
+  } finally {
+    if (spinner) spinner.style.display = 'none';
+  }
+}
+
+// ==============================================
+// WORD EXPORT — selbstgebaut, kein CDN-Problem
+// Erzeugt echte .docx Datei (ZIP + XML)
+// ==============================================
+
+function buchExportWord() {
+  const p = curProj();
+  if (!p) { toast('Kein Projekt ausgewählt.', 'error'); return; }
+  if (buchCurChId) buchSaveContent();
+
+  // JSZip von cdnjs laden (zuverlässiger als unpkg)
+  if (typeof JSZip === 'undefined') {
+    toast('Lade ZIP-Bibliothek …', '');
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+    script.onload = () => { toast('Export startet …', 'success'); setTimeout(doDocxExport, 200); };
+    script.onerror = () => {
+      // Fallback: direkter RTF-Export ohne externe Bibliothek
+      toast('ZIP nicht geladen — exportiere als RTF …', '');
+      doRtfExport();
+    };
+    document.head.appendChild(script);
+  } else {
+    doDocxExport();
+  }
+}
+
+// ---- DOCX via JSZip ----
+function doDocxExport() {
+  const p = curProj(); if (!p) return;
+  try {
+    const xml = buildDocumentXml(p);
+    const zip = new JSZip();
+
+    // [Content_Types].xml
+    zip.file('[Content_Types].xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+  <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+  <Default Extension="xml" ContentType="application/xml"/>
+  <Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
+  <Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/>
+  <Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/>
+</Types>`);
+
+    // _rels/.rels
+    zip.folder('_rels').file('.rels', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>
+</Relationships>`);
+
+    // word/_rels/document.xml.rels
+    zip.folder('word').folder('_rels').file('document.xml.rels', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
+  <Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/>
+</Relationships>`);
+
+    // word/settings.xml
+    zip.folder('word').file('settings.xml', `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:settings xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+  <w:defaultTabStop w:val="720"/>
+</w:settings>`);
+
+    // word/styles.xml
+    zip.folder('word').file('styles.xml', buildStylesXml());
+
+    // word/document.xml
+    zip.folder('word').file('document.xml', xml);
+
+    zip.generateAsync({ type: 'blob', mimeType: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' })
+      .then(blob => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = (p.title || 'buch').replace(/[^a-zA-Z0-9äöüÄÖÜß \-]/g, '_') + '.docx';
+        a.click();
+        URL.revokeObjectURL(url);
+        toast('Word-Datei exportiert! ✓', 'success');
+      })
+      .catch(err => { console.error(err); toast('Export fehlgeschlagen: ' + err.message, 'error'); });
+  } catch(err) {
+    console.error(err);
+    toast('Fehler beim Erstellen: ' + err.message, 'error');
+  }
+}
+
+function xmlEsc(s) {
+  if (!s) return '';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;');
+}
+
+function buildStylesXml() {
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml">
+  <w:docDefaults>
+    <w:rPrDefault><w:rPr>
+      <w:rFonts w:ascii="Georgia" w:hAnsi="Georgia" w:cs="Georgia"/>
+      <w:sz w:val="24"/><w:szCs w:val="24"/>
+      <w:lang w:val="de-DE"/>
+    </w:rPr></w:rPrDefault>
+    <w:pPrDefault><w:pPr>
+      <w:spacing w:after="0" w:line="360" w:lineRule="auto"/>
+    </w:pPr></w:pPrDefault>
+  </w:docDefaults>
+  <w:style w:type="paragraph" w:styleId="Normal" w:default="1">
+    <w:name w:val="Normal"/>
+    <w:pPr><w:spacing w:after="0" w:line="360" w:lineRule="auto"/></w:pPr>
+    <w:rPr><w:rFonts w:ascii="Georgia" w:hAnsi="Georgia"/><w:sz w:val="24"/></w:rPr>
+  </w:style>
+  <w:style w:type="paragraph" w:styleId="ChapterLabel">
+    <w:name w:val="Chapter Label"/>
+    <w:pPr><w:spacing w:before="480" w:after="120"/></w:pPr>
+    <w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri"/><w:sz w:val="22"/><w:b/><w:color w:val="C9A84C"/><w:caps/></w:rPr>
+  </w:style>
+  <w:style w:type="paragraph" w:styleId="ChapterTitle">
+    <w:name w:val="Chapter Title"/>
+    <w:pPr><w:spacing w:before="120" w:after="480"/></w:pPr>
+    <w:rPr><w:rFonts w:ascii="Georgia" w:hAnsi="Georgia"/><w:sz w:val="40"/><w:b/></w:rPr>
+  </w:style>
+  <w:style w:type="paragraph" w:styleId="BookTitle">
+    <w:name w:val="Book Title"/>
+    <w:pPr><w:jc w:val="center"/><w:spacing w:before="2880" w:after="480"/></w:pPr>
+    <w:rPr><w:rFonts w:ascii="Georgia" w:hAnsi="Georgia"/><w:sz w:val="56"/><w:b/></w:rPr>
+  </w:style>
+</w:styles>`;
+}
+
+function buildDocumentXml(p) {
+  // DIN A4 in twentieths of a point (twips): 11906 x 16838
+  // 25mm margins = 1418 twips
+  let body = '';
+
+  // Title page
+  body += wPara(xmlEsc(p.title || 'Unbenanntes Buch'), { style: 'BookTitle', bold: true, sz: 56 });
+  if (p.subtitle) body += wPara(xmlEsc(p.subtitle), { center: true, italic: true, sz: 32, color: '666666', spaceBefore: 0, spaceAfter: 240 });
+  if (p.genre)    body += wPara(xmlEsc(p.genre),    { center: true, sz: 22, color: '888888', spaceBefore: 0, spaceAfter: 480 });
+  body += wPageBreak();
+
+  const chapters = p.chapters || [];
+  chapters.forEach((ch, ci) => {
+    const isProlog = ch.isProlog;
+
+    // Chapter label line
+    if (isProlog) {
+      body += wPara('Prolog', { bold: true, sz: 22, color: '2D6E6E', caps: true, spaceBefore: 480, spaceAfter: 120 });
+    } else {
+      body += wPara('Kapitel ' + (ch.num || String(ci + 1)), { bold: true, sz: 22, color: 'C9A84C', caps: true, spaceBefore: 480, spaceAfter: 120 });
+    }
+
+    // Chapter title
+    const titleText = ch.title && ch.title !== 'Prolog' ? ch.title : (isProlog ? '' : '');
+    if (titleText) {
+      body += wPara(xmlEsc(titleText), { bold: true, sz: 40, spaceBefore: 0, spaceAfter: 480 });
+    }
+
+    // Content paragraphs
+    const content = ch.buchContent || '';
+    const tmp = document.createElement('div');
+    tmp.innerHTML = content;
+    let isFirst = true;
+    tmp.childNodes.forEach(node => {
+      const text = (node.textContent || '').trim();
+      if (!text) return;
+      const indent = !isFirst && ch.buchIndent ? 720 : 0;
+      body += buildContentPara(node, indent);
+      isFirst = false;
+    });
+
+    // Page break between chapters (not after last)
+    if (ci < chapters.length - 1) body += wPageBreak();
+  });
+
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas"
+  xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+  xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+<w:body>
+${body}
+<w:sectPr>
+  <w:pgSz w:w="11906" w:h="16838"/>
+  <w:pgMar w:top="1418" w:right="1134" w:bottom="1418" w:left="1134" w:header="709" w:footer="709" w:gutter="0"/>
+</w:sectPr>
+</w:body>
+</w:document>`;
+}
+
+function wPara(text, opts = {}) {
+  const { bold=false, italic=false, underline=false, sz=24, color='', center=false,
+          caps=false, spaceBefore=null, spaceAfter=null } = opts;
+  const spacing = (spaceBefore !== null || spaceAfter !== null)
+    ? `<w:spacing${spaceBefore!==null?' w:before="'+spaceBefore+'"':''}${spaceAfter!==null?' w:after="'+spaceAfter+'"':''} w:line="360" w:lineRule="auto"/>`
+    : `<w:spacing w:after="0" w:line="360" w:lineRule="auto"/>`;
+  const jc = center ? '<w:jc w:val="center"/>' : '';
+  const rpr = [
+    `<w:rFonts w:ascii="Georgia" w:hAnsi="Georgia"/>`,
+    `<w:sz w:val="${sz}"/><w:szCs w:val="${sz}"/>`,
+    bold ? '<w:b/>' : '',
+    italic ? '<w:i/>' : '',
+    underline ? '<w:u w:val="single"/>' : '',
+    caps ? '<w:caps/>' : '',
+    color ? `<w:color w:val="${color}"/>` : ''
+  ].join('');
+  return `<w:p><w:pPr>${spacing}${jc}</w:pPr><w:r><w:rPr>${rpr}</w:rPr><w:t xml:space="preserve">${text}</w:t></w:r></w:p>\n`;
+}
+
+function wPageBreak() {
+  return `<w:p><w:r><w:br w:type="page"/></w:r></w:p>\n`;
+}
+
+function buildContentPara(node, firstLineIndent = 0) {
+  const ind = firstLineIndent > 0 ? `<w:ind w:firstLine="${firstLineIndent}"/>` : '';
+  const spacing = `<w:spacing w:after="0" w:line="360" w:lineRule="auto"/>`;
+  let runs = '';
+
+  function walkNode(n, bold, italic, underline) {
+    if (n.nodeType === 3) {
+      const t = n.textContent;
+      if (!t) return;
+      const rpr = [
+        `<w:rFonts w:ascii="Georgia" w:hAnsi="Georgia"/>`,
+        `<w:sz w:val="24"/><w:szCs w:val="24"/>`,
+        bold ? '<w:b/>' : '',
+        italic ? '<w:i/>' : '',
+        underline ? '<w:u w:val="single"/>' : ''
+      ].join('');
+      runs += `<w:r><w:rPr>${rpr}</w:rPr><w:t xml:space="preserve">${xmlEsc(t)}</w:t></w:r>`;
+    } else if (n.nodeType === 1) {
+      const tag = n.tagName.toLowerCase();
+      const b = bold || tag === 'b' || tag === 'strong';
+      const i = italic || tag === 'i' || tag === 'em';
+      const u = underline || tag === 'u';
+      n.childNodes.forEach(child => walkNode(child, b, i, u));
+    }
+  }
+
+  if (node.nodeType === 3) {
+    const t = node.textContent;
+    runs = `<w:r><w:rPr><w:rFonts w:ascii="Georgia" w:hAnsi="Georgia"/><w:sz w:val="24"/></w:rPr><w:t xml:space="preserve">${xmlEsc(t)}</w:t></w:r>`;
+  } else {
+    node.childNodes.forEach(child => walkNode(child, false, false, false));
+  }
+
+  if (!runs) return '';
+  return `<w:p><w:pPr>${spacing}${ind}</w:pPr>${runs}</w:p>\n`;
+}
+
+// ---- RTF Fallback (kein externes Script nötig) ----
+function doRtfExport() {
+  const p = curProj(); if (!p) return;
+  let rtf = '{\\rtf1\\ansi\\deff0\n';
+  rtf += '{\\fonttbl{\\f0\\froman\\fcharset0 Georgia;}{\\f1\\fswiss\\fcharset0 Calibri;}}\n';
+  rtf += '{\\colortbl;\\red201\\green168\\blue76;\\red45\\green110\\blue110;}\n';
+  // Page size A4 (twips: 11906 x 16838), margins 1418
+  rtf += '\\paperw11906\\paperh16838\\margl1418\\margr1134\\margt1418\\margb1418\n';
+  rtf += '\\f0\\fs24\\sl360\\slmult1\n';
+
+  // Title
+  rtf += `\\qc\\fs56\\b ${rtfEsc(p.title || 'Unbenanntes Buch')}\\b0\\fs24\\ql\\par\n`;
+  if (p.subtitle) rtf += `\\qc\\fs32\\i ${rtfEsc(p.subtitle)}\\i0\\fs24\\ql\\par\n`;
+  rtf += '\\page\n';
+
+  (p.chapters || []).forEach((ch, ci) => {
+    const label = ch.isProlog ? 'Prolog' : 'Kapitel ' + (ch.num || String(ci + 1));
+    rtf += `\\cf1\\fs22\\b\\caps ${rtfEsc(label)}\\caps0\\b0\\cf0\\fs24\\par\n`;
+    if (ch.title && !ch.isProlog) rtf += `\\fs40\\b ${rtfEsc(ch.title)}\\b0\\fs24\\par\n`;
+
+    const tmp = document.createElement('div');
+    tmp.innerHTML = ch.buchContent || '';
+    let isFirst = true;
+    tmp.childNodes.forEach(node => {
+      const text = (node.textContent || '').trim();
+      if (!text) return;
+      const indent = !isFirst && ch.buchIndent ? '\\fi720 ' : '';
+      rtf += `\\sl360\\slmult1 ${indent}${rtfEsc(text)}\\par\n`;
+      isFirst = false;
+    });
+
+    if (ci < (p.chapters || []).length - 1) rtf += '\\page\n';
+  });
+
+  rtf += '}';
+
+  const blob = new Blob([rtf], { type: 'application/rtf' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = (p.title || 'buch').replace(/[^a-zA-Z0-9äöüÄÖÜß \-]/g, '_') + '.rtf';
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Als RTF exportiert (Word kann es öffnen) ✓', 'success');
+}
+
+function rtfEsc(s) {
+  if (!s) return '';
+  let r = '';
+  for (const c of s) {
+    const code = c.charCodeAt(0);
+    if (code > 127) r += `\\u${code}?`;
+    else if (c === '\\') r += '\\\\';
+    else if (c === '{') r += '\\{';
+    else if (c === '}') r += '\\}';
+    else r += c;
+  }
+  return r;
+}
+
+// ==============================================
+// BUCHRÜCKEN VORSCHAU
+// ==============================================
+let currentSpineColor = 'linear-gradient(135deg,#1a1410,#3d3530)';
+
+function updateSpinePreview() {
+  const p = curProj(); if (!p) return;
+  const title = p.title || 'Titel';
+  const author = p.author || '';
+
+  const spine = document.getElementById('spine-preview');
+  const spineTitle = document.getElementById('spine-title-preview');
+  const spineAuthor = document.getElementById('spine-author-preview');
+  const coverTitle = document.getElementById('cover-title-preview');
+  const coverAuthor = document.getElementById('cover-author-preview');
+
+  if (spine) spine.style.background = currentSpineColor;
+  if (spineTitle) spineTitle.textContent = title;
+  if (spineAuthor) spineAuthor.textContent = author;
+  if (coverTitle) coverTitle.textContent = title;
+  if (coverAuthor) coverAuthor.textContent = author ? author.toUpperCase() : '';
+
+  const cover = document.getElementById('cover-preview');
+  if (cover) cover.style.background = currentSpineColor;
+}
+
+function setSpineColor(el) {
+  document.querySelectorAll('.spine-color-swatch').forEach(s => s.classList.remove('selected'));
+  el.classList.add('selected');
+  currentSpineColor = el.dataset.color;
+  updateSpinePreview();
+  // Save to project
+  const p = curProj(); if (!p) return;
+  p.spineColor = currentSpineColor;
+  p.updatedAt = Date.now(); save();
+}
+
+// Also call updateSpinePreview when settings tab opens
+const _origProjTab = projTab;
+
+function mobileGoTab(tab) {
+  // Find the matching project tab button and activate it
+  const allTabs = document.querySelectorAll('.project-tab');
+  let matchBtn = null;
+  allTabs.forEach(btn => {
+    // Match by onclick attribute containing the tab name
+    if (btn.getAttribute('onclick') && btn.getAttribute('onclick').includes("'"+tab+"'")) {
+      matchBtn = btn;
+    }
+  });
+  projTab(tab, matchBtn);
+  closeMobile();
+}
+
+// ==============================================
+// MOBILE
+// ==============================================
+function toggleMobile(){ document.getElementById('sidebar').classList.toggle('open'); }
+function closeMobile(){ document.getElementById('sidebar').classList.remove('open'); }
+
+// ==============================================
+// GOOGLE DRIVE SYNC
+// ==============================================
+
+function getDriveUrl() {
+  return localStorage.getItem('ss_drive_url') || '';
+}
+function getDrivePw() {
+  return localStorage.getItem('ss_drive_pw') || '';
+}
+
+function saveDriveSettings() {
+  const url = document.getElementById('drive-script-url').value.trim();
+  const pw  = document.getElementById('drive-password').value;
+  localStorage.setItem('ss_drive_url', url);
+  localStorage.setItem('ss_drive_pw', pw);
+  updateDriveButtons();
+}
+
+function loadDriveSettings() {
+  const url = getDriveUrl();
+  const pw  = getDrivePw();
+  const urlEl = document.getElementById('drive-script-url');
+  const pwEl  = document.getElementById('drive-password');
+  if (urlEl) urlEl.value = url;
+  if (pwEl)  pwEl.value  = pw;
+  updateDriveButtons();
+}
+
+function updateDriveButtons() {
+  const hasUrl = !!getDriveUrl();
+  ['btn-drive-save','btn-drive-load','settings-drive-save','settings-drive-load','smn-drive-save','smn-drive-load'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = hasUrl ? '' : 'none';
+  });
+}
+
+function driveStatus(msg, ok = null) {
+  const el = document.getElementById('drive-status');
+  if (!el) return;
+  el.style.display = msg ? 'block' : 'none';
+  el.textContent = msg;
+  el.style.color = ok === true ? 'var(--green-soft)' : ok === false ? 'var(--red-soft)' : 'var(--ink-muted)';
+}
+
+async function driveCall(params) {
+  const url = getDriveUrl();
+  if (!url) { toast('Bitte zuerst die Script-URL eintragen.', 'error'); return null; }
+  const pw = getDrivePw();
+  const qs = new URLSearchParams({ ...params, ...(pw ? { pw } : {}) });
+  try {
+    const res = await fetch(url + '?' + qs.toString(), { method: 'GET' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const text = await res.text();
+    try { return JSON.parse(text); }
+    catch { return { error: 'Ungültige Antwort: ' + text.slice(0, 80) }; }
+  } catch(err) {
+    return { error: err.message };
+  }
+}
+
+async function driveTest() {
+  driveStatus('Verbinde …');
+  const btn = document.querySelector('[onclick="driveTest()"]');
+  if (btn) btn.disabled = true;
+  const res = await driveCall({ action: 'list' });
+  if (btn) btn.disabled = false;
+  if (!res) return;
+  if (res.error) {
+    driveStatus('⚠ Fehler: ' + res.error, false);
+    toast('Verbindung fehlgeschlagen.', 'error');
+  } else {
+    const count = (res.files || []).length;
+    driveStatus(`✓ Verbunden — ${count} Projekt${count !== 1 ? 'e' : ''} in Drive`, true);
+    toast('Verbindung erfolgreich!', 'success');
+    updateDriveButtons();
+  }
+}
+
+async function driveSave() {
+  const p = curProj();
+  if (!p) { toast('Kein Projekt ausgewählt.', 'error'); return; }
+  if (buchCurChId) buchSaveContent();
+
+  const url = getDriveUrl();
+  if (!url) { toast('Bitte zuerst die Script-URL eintragen.', 'error'); return; }
+
+  toast('Speichere in Drive …', '');
+  driveStatus('Speichere …');
+
+  const pw = getDrivePw();
+  const projectName = p.title || 'Unbenanntes Projekt';
+  const data = JSON.stringify({ schreibstudio: true, version: 2, project: p });
+
+  try {
+    // GAS verarbeitet POST mit FormData am zuverlässigsten über URLSearchParams
+    const params = new URLSearchParams();
+    params.append('action', 'save');
+    params.append('name', projectName);
+    if (pw) params.append('pw', pw);
+    params.append('data', data);
+
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString()
+    });
+
+    const text = await res.text();
+    let result;
+    try { result = JSON.parse(text); }
+    catch { result = { error: 'Unlesbare Antwort: ' + text.slice(0, 100) }; }
+
+    if (result.error) throw new Error(result.error);
+
+    toast('✓ In Google Drive gespeichert!', 'success');
+    driveStatus('✓ Gespeichert: ' + new Date().toLocaleTimeString('de-DE'), true);
+  } catch(err) {
+    // Fallback: GET mit encoded data (für GAS-Scripts die nur doGet haben)
+    try {
+      const fallbackUrl = url + '?' + new URLSearchParams({
+        action: 'save',
+        name: projectName,
+        ...(pw ? { pw } : {}),
+        data: data
+      }).toString();
+
+      const res2 = await fetch(fallbackUrl);
+      const text2 = await res2.text();
+      let result2;
+      try { result2 = JSON.parse(text2); }
+      catch { result2 = { error: text2.slice(0, 100) }; }
+
+      if (result2.error) throw new Error(result2.error);
+
+      toast('✓ In Google Drive gespeichert!', 'success');
+      driveStatus('✓ Gespeichert: ' + new Date().toLocaleTimeString('de-DE'), true);
+    } catch(err2) {
+      toast('Fehler beim Speichern: ' + err2.message, 'error');
+      driveStatus('⚠ ' + err2.message, false);
+    }
+  }
+}
+
+async function driveLoadModal() {
+  openModal('modal-drive-load');
+  const statusEl = document.getElementById('drive-load-status');
+  const listEl   = document.getElementById('drive-projects-list');
+  statusEl.textContent = 'Lade Projektliste …';
+  statusEl.style.color = 'var(--ink-muted)';
+  listEl.innerHTML = '';
+
+  const res = await driveCall({ action: 'list' });
+  if (!res || res.error) {
+    statusEl.textContent = '⚠ ' + (res?.error || 'Keine Verbindung');
+    statusEl.style.color = 'var(--red-soft)';
+    return;
+  }
+
+  const files = res.files || [];
+  if (!files.length) {
+    statusEl.textContent = 'Noch keine Projekte in Drive gespeichert.';
+    return;
+  }
+
+  statusEl.textContent = files.length + ' Projekt' + (files.length !== 1 ? 'e' : '') + ' gefunden:';
+
+  files.forEach(f => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--paper-warm);border-radius:var(--radius);border:1px solid var(--paper-dark)';
+
+    const info = document.createElement('div');
+    info.style.flex = '1';
+    info.innerHTML = `<div style="font-family:var(--font-display);font-size:15px;color:var(--ink)">${esc(f.name)}</div>
+      ${f.updated ? `<div style="font-size:11px;color:var(--ink-muted);margin-top:2px">${new Date(f.updated).toLocaleString('de-DE')}</div>` : ''}`;
+
+    const loadBtn = document.createElement('button');
+    loadBtn.className = 'btn-ok';
+    loadBtn.style.fontSize = '12px';
+    loadBtn.textContent = '⬇ Laden';
+    loadBtn.addEventListener('click', () => driveLoadProject(f.name, loadBtn));
+
+    const delBtn = document.createElement('button');
+    delBtn.className = 'btn-cancel';
+    delBtn.style.cssText = 'font-size:12px;color:var(--red-soft)';
+    delBtn.textContent = '🗑';
+    delBtn.addEventListener('click', () => driveDeleteProject(f.name, row));
+
+    row.appendChild(info);
+    row.appendChild(loadBtn);
+    row.appendChild(delBtn);
+    listEl.appendChild(row);
+  });
+}
+
+async function driveLoadProject(name, btn) {
+  if (btn) { btn.disabled = true; btn.textContent = '…'; }
+  const res = await driveCall({ action: 'load', name });
+  if (btn) { btn.disabled = false; btn.textContent = '⬇ Laden'; }
+
+  if (!res || res.error) {
+    toast('Fehler: ' + (res?.error || 'Keine Antwort'), 'error');
+    return;
+  }
+
+  // res should be the project JSON directly or wrapped
+  let proj = null;
+  if (res.schreibstudio && res.project) proj = res.project;
+  else if (res.id && res.title) proj = res; // already unwrapped
+
+  if (!proj) { toast('Ungültiges Projektformat.', 'error'); return; }
+
+  // Ensure new fields
+  if (!proj.locations) proj.locations = [];
+  if (!proj.relationships) proj.relationships = [];
+
+  const existing = S.projects.findIndex(p => p.id === proj.id);
+  if (existing >= 0) {
+    if (!confirm(`"${proj.title}" existiert bereits lokal. Überschreiben?`)) return;
+    S.projects[existing] = proj;
+  } else {
+    S.projects.push(proj);
+  }
+
+  save();
+  closeModal('modal-drive-load');
+  renderDashboard();
+  showProject(proj.id);
+  toast('✓ Projekt aus Drive geladen!', 'success');
+}
+
+async function driveDeleteProject(name, rowEl) {
+  if (!confirm(`"${name}" aus Google Drive löschen?`)) return;
+  const res = await driveCall({ action: 'delete', name });
+  if (res && !res.error) {
+    rowEl.remove();
+    toast('Aus Drive gelöscht.', '');
+  } else {
+    toast('Fehler: ' + (res?.error || 'Keine Antwort'), 'error');
+  }
+}
+
+// ==============================================
+// INIT
+// ==============================================
+function init(){
+  load();
+  S.curChapter=null; S.curScene=null; S.curChar=null; S.curLoc=null;
+  loadDriveSettings();
+  renderDashboard(); renderSidebar();
+  showDashboard();
+
+  document.addEventListener('keydown',e=>{
+    if((e.ctrlKey||e.metaKey)&&e.key==='s'){
+      e.preventDefault();
+      saveEditorContent();
+      toast('Gespeichert ✓','success');
+    }
+    if(e.key==='Escape'){
+      document.querySelectorAll('.modal-overlay.open').forEach(m=>m.classList.remove('open'));
+      closeMobile();
+      if(relFirstClick){ relFirstClick=null; drawGraph(); }
+    }
+  });
+
+  window.addEventListener('resize',()=>{
+    const canvas=document.getElementById('rel-canvas');
+    const wrap=document.getElementById('rel-canvas-wrap');
+    if(canvas&&wrap&&document.getElementById('tab-beziehungen').classList.contains('active')){
+      canvas.width=wrap.clientWidth; canvas.height=wrap.clientHeight; drawGraph();
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded',init);
+</script>
+</body>
+</html>
